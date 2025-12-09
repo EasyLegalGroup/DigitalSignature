@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Nye_kommende_sager_Samlevende</fullName>
+    <columns>NAME</columns>
+    <columns>Account__c</columns>
+    <columns>OWNER.FIRST_NAME</columns>
+    <columns>journal_Deadline__c</columns>
+    <columns>Civil_Status__c</columns>
+    <columns>Children_type__c</columns>
+    <columns>inheritance_from_first__c</columns>
+    <columns>inheritance_from_longest_lived__c</columns>
+    <columns>CREATEDBY_USER</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>Journal_States__c</columns>
+    <columns>LAST_UPDATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Journal_States__c</field>
+        <operation>equals</operation>
+        <value>new</value>
+    </filters>
+    <filters>
+        <field>OWNER.FIRST_NAME</field>
+        <operation>notEqual</operation>
+        <value>Hamayoon</value>
+    </filters>
+    <filters>
+        <field>journal_Deadline__c</field>
+        <operation>greaterThan</operation>
+        <value>4/12/2020 12:00 AM</value>
+    </filters>
+    <filters>
+        <field>Account__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <filters>
+        <field>Civil_Status__c</field>
+        <operation>equals</operation>
+        <value>Cohabiting</value>
+    </filters>
+    <label>Nye kommende sager Samlevende</label>
+</ListView>

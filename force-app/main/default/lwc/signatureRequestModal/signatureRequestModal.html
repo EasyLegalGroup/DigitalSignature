@@ -1,0 +1,196 @@
+<template>
+    <template if:true={isOpen}>
+        <section role="dialog" tabindex="-1" aria-modal="true" class="slds-modal slds-fade-in-open slds-modal_large">
+            <div class="slds-modal__container">
+                <!-- Header -->
+                <header class="slds-modal__header">
+                    <lightning-button-icon
+                        icon-name="utility:close"
+                        alternative-text="Close"
+                        variant="bare-inverse"
+                        class="slds-modal__close"
+                        onclick={handleClose}>
+                    </lightning-button-icon>
+                    <h2 class="slds-text-heading_medium">{modalTitle}</h2>
+                </header>
+
+                <!-- Content -->
+                <div class="slds-modal__content slds-p-around_medium">
+                    <!-- Loading spinner -->
+                    <template if:true={isLoading}>
+                        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                    </template>
+
+                    <!-- Existing Requests List -->
+                    <template if:true={hasExistingRequests}>
+                        <h3 class="slds-text-heading_small slds-m-bottom_small">Existing Signature Requests</h3>
+                        <div class="slds-m-bottom_medium">
+                            <template for:each={requestsWithMeta} for:item="req">
+                                <div key={req.Id} class="slds-box slds-m-bottom_x-small request-card">
+                                    <div class="slds-grid slds-wrap">
+                                        <!-- Left: Status and Info -->
+                                        <div class="slds-col slds-size_8-of-12">
+                                            <div class="slds-grid slds-grid_vertical-align-center">
+                                                <span class={req.statusBadgeClass}>{req.Status__c}</span>
+                                                <span class="slds-m-left_small slds-text-body_small">
+                                                    {req.Name}
+                                                </span>
+                                            </div>
+                                            <p class="slds-m-top_xx-small slds-text-body_small slds-text-color_weak">
+                                                <strong>Signer:</strong> {req.Signer_Name__c} ({req.Signer_Email__c})
+                                            </p>
+                                            <p class="slds-text-body_small slds-text-color_weak">
+                                                <strong>Created:</strong> {req.formattedCreatedDate}
+                                                <template if:true={req.Expiration_Date__c}>
+                                                    &nbsp;|&nbsp;<strong>Expires:</strong> {req.formattedExpirationDate}
+                                                </template>
+                                                <template if:true={req.formattedCompletedDate}>
+                                                    &nbsp;|&nbsp;<strong>Completed:</strong> {req.formattedCompletedDate}
+                                                </template>
+                                            </p>
+                                            <template if:true={req.Error_Message__c}>
+                                                <p class="slds-text-body_small slds-text-color_error slds-m-top_xx-small">
+                                                    {req.Error_Message__c}
+                                                </p>
+                                            </template>
+                                        </div>
+                                        <!-- Right: Actions -->
+                                        <div class="slds-col slds-size_4-of-12 slds-text-align_right">
+                                            <template if:true={req.hasLink}>
+                                                <lightning-button-icon
+                                                    icon-name="utility:copy_to_clipboard"
+                                                    alternative-text="Copy Signing Link"
+                                                    title="Copy Signing Link"
+                                                    variant="border"
+                                                    class="slds-m-right_xx-small"
+                                                    data-link={req.Signing_Link__c}
+                                                    onclick={handleCopyLink}>
+                                                </lightning-button-icon>
+                                            </template>
+                                            <lightning-button-icon
+                                                icon-name="utility:refresh"
+                                                alternative-text="Refresh Status"
+                                                title="Refresh Status"
+                                                variant="border"
+                                                class="slds-m-right_xx-small"
+                                                data-id={req.Id}
+                                                onclick={handleRefreshStatus}>
+                                            </lightning-button-icon>
+                                            <template if:true={req.canCancel}>
+                                                <lightning-button
+                                                    label="Cancel"
+                                                    variant="destructive-text"
+                                                    size="small"
+                                                    data-id={req.Id}
+                                                    onclick={handleCancelRequest}>
+                                                </lightning-button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+
+                    <!-- No existing requests message -->
+                    <template if:false={hasExistingRequests}>
+                        <template if:false={showNewRequestForm}>
+                            <div class="slds-illustration slds-illustration_small slds-m-bottom_medium">
+                                <p class="slds-text-body_regular slds-text-color_weak slds-text-align_center">
+                                    No signature requests for this document yet.
+                                </p>
+                            </div>
+                        </template>
+                    </template>
+
+                    <!-- New Request Form -->
+                    <template if:true={showNewRequestForm}>
+                        <div class="slds-box slds-theme_shade slds-m-top_medium">
+                            <h3 class="slds-text-heading_small slds-m-bottom_small">New Signature Request</h3>
+                            
+                            <div class="slds-grid slds-wrap slds-gutters_small">
+                                <div class="slds-col slds-size_1-of-2 slds-m-bottom_small">
+                                    <lightning-input
+                                        label="Signer Name"
+                                        value={signerName}
+                                        data-field="signerName"
+                                        onchange={handleInputChange}
+                                        required>
+                                    </lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-m-bottom_small">
+                                    <lightning-input
+                                        type="email"
+                                        label="Signer Email"
+                                        value={signerEmail}
+                                        data-field="signerEmail"
+                                        onchange={handleInputChange}
+                                        required>
+                                    </lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-m-bottom_small">
+                                    <lightning-input
+                                        label="Document Title"
+                                        value={title}
+                                        data-field="title"
+                                        onchange={handleInputChange}
+                                        placeholder="Leave blank to use document name">
+                                    </lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-m-bottom_small">
+                                    <lightning-combobox
+                                        label="Language"
+                                        value={language}
+                                        options={languageOptions}
+                                        onchange={handleLanguageChange}>
+                                    </lightning-combobox>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-m-bottom_small">
+                                    <lightning-combobox
+                                        label="Expires In"
+                                        value={expirationDays}
+                                        options={expirationOptions}
+                                        onchange={handleExpirationChange}>
+                                    </lightning-combobox>
+                                </div>
+                            </div>
+
+                            <div class="slds-m-top_medium slds-text-align_right">
+                                <lightning-button
+                                    label="Cancel"
+                                    onclick={handleCancelNewForm}
+                                    class="slds-m-right_small">
+                                </lightning-button>
+                                <lightning-button
+                                    label="Send for Signature"
+                                    variant="brand"
+                                    onclick={handleCreateRequest}
+                                    disabled={disableCreateButton}>
+                                </lightning-button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Footer -->
+                <footer class="slds-modal__footer">
+                    <template if:false={showNewRequestForm}>
+                        <template if:true={canCreateNew}>
+                            <lightning-button
+                                label="New Signature Request"
+                                variant="brand"
+                                onclick={handleShowNewForm}
+                                class="slds-m-right_small">
+                            </lightning-button>
+                        </template>
+                    </template>
+                    <lightning-button
+                        label="Close"
+                        onclick={handleClose}>
+                    </lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

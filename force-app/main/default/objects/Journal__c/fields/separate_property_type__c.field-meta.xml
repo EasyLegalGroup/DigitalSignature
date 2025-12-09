@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>separate_property_type__c</fullName>
+    <label>Særejeformer</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Kombinationssæreje for arv m.v. til livsarvinger</fullName>
+                <default>false</default>
+                <label>Kombinationssæreje for arv m.v. til livsarvinger</label>
+            </value>
+            <value>
+                <fullName>Fuldstændigt særeje for arv m.v. til livsarvinger</fullName>
+                <default>false</default>
+                <label>Fuldstændigt særeje for arv m.v. til livsarvinger</label>
+            </value>
+            <value>
+                <fullName>Fuldstændigt særeje med succession</fullName>
+                <default>false</default>
+                <label>Fuldstændigt særeje med succession</label>
+            </value>
+            <value>
+                <fullName>Missing</fullName>
+                <default>true</default>
+                <label>N/A</label>
+            </value>
+            <value>
+                <fullName>Combination: Kombinationssæreje for arv m.v. til livsarvinger</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Combination: Kombinationssæreje for arv m.v. til livsarvinger</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

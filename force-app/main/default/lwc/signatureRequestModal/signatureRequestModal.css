@@ -1,0 +1,19 @@
+.request-card {
+    border-left: 3px solid #0176d3;
+}
+
+.request-card:has(.slds-theme_success) {
+    border-left-color: #2e844a;
+}
+
+.request-card:has(.slds-theme_error) {
+    border-left-color: #c23934;
+}
+
+.request-card:has(.slds-theme_warning) {
+    border-left-color: #fe9339;
+}
+
+.slds-modal__content {
+    min-height: 300px;
+}

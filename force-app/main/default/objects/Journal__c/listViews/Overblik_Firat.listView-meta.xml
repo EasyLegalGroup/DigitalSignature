@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Overblik_Firat</fullName>
+    <columns>NAME</columns>
+    <columns>Account__c</columns>
+    <columns>journal_Deadline__c</columns>
+    <columns>OWNER.FIRST_NAME</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Journal_States__c</field>
+        <operation>equals</operation>
+        <value>new,Misset aftale,Afventer information - Dokumenter ikke sendt,draft,Afventer Accept_dokumenter_afsendt,client_review,public_registration,Ikke afsendt,Misc opfølgning,Færdig - Afventer respons,complete,canceled,Oprydning</value>
+    </filters>
+    <filters>
+        <field>Account__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <filters>
+        <field>OWNER.FIRST_NAME</field>
+        <operation>equals</operation>
+        <value>Firat</value>
+    </filters>
+    <label>Overblik Firat</label>
+</ListView>

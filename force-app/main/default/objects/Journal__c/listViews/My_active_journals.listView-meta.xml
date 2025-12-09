@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>My_active_journals</fullName>
+    <columns>NAME</columns>
+    <columns>Account__c</columns>
+    <columns>journal_Deadline__c</columns>
+    <filterScope>Mine</filterScope>
+    <filters>
+        <field>Journal_States__c</field>
+        <operation>equals</operation>
+        <value>new,draft,client_review,public_registration,service_call</value>
+    </filters>
+    <label>My active journals</label>
+</ListView>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>last_surviving_conditions__c</fullName>
+    <label>Længstlevendes testationsret</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Ja</fullName>
+                <default>false</default>
+                <label>Ja</label>
+            </value>
+            <value>
+                <fullName>Nej</fullName>
+                <default>false</default>
+                <label>Nej</label>
+            </value>
+            <value>
+                <fullName>Kun 50%</fullName>
+                <default>false</default>
+                <label>Kun 50%</label>
+            </value>
+            <value>
+                <fullName>Missing</fullName>
+                <default>true</default>
+                <label>N/A</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

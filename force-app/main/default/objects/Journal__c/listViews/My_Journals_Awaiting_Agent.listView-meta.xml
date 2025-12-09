@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>My_Journals_Awaiting_Agent</fullName>
+    <columns>NAME</columns>
+    <columns>Latest_Note_on_Account__c</columns>
+    <columns>Awaiting_agent_since__c</columns>
+    <columns>Journal_States__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Account__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <filters>
+        <field>Journal_States__c</field>
+        <operation>notEqual</operation>
+        <value>complete,Færdig + Servicekald,Færdig + Servicekald ikke besvaret,Færdig Færdig,Færdig ny process,Arkiveret - (uden for proces),Færdig - Afventer respons,Arkiveret (Intet svar),Annulleringsark,Tinglysning,Intern - Tinglysning haster</value>
+    </filters>
+    <filters>
+        <field>Is_Current_User_Responsible_Lawyer__c</field>
+        <operation>equals</operation>
+        <value>1</value>
+    </filters>
+    <filters>
+        <field>GA_Reply_Status__c</field>
+        <operation>equals</operation>
+        <value>Awaiting agent</value>
+    </filters>
+    <label>My Journals (Awaiting Agent)</label>
+</ListView>

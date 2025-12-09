@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Email_Delay_Notifications__c</fullName>
+    <label>Notified by email about delay</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>4-week Notification Sent</fullName>
+                <default>false</default>
+                <label>4-week Notification Sent</label>
+            </value>
+            <value>
+                <fullName>7-week Notification Sent</fullName>
+                <default>false</default>
+                <label>7-week Notification Sent</label>
+            </value>
+            <value>
+                <fullName>10-week Notification Sent</fullName>
+                <default>false</default>
+                <label>10-week Notification Sent</label>
+            </value>
+            <value>
+                <fullName>13-week Notification Sent</fullName>
+                <default>false</default>
+                <label>13-week Notification Sent</label>
+            </value>
+            <value>
+                <fullName>16-week Notification Sent</fullName>
+                <default>false</default>
+                <label>16-week Notification Sent</label>
+            </value>
+            <value>
+                <fullName>19-week Notification Sent</fullName>
+                <default>false</default>
+                <label>19-week Notification Sent</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

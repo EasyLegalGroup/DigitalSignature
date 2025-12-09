@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Testament_Type__c</fullName>
+    <label>Testament Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Witness</fullName>
+                <default>false</default>
+                <label>Vidne</label>
+            </value>
+            <value>
+                <fullName>Registrar</fullName>
+                <default>false</default>
+                <label>Notar</label>
+            </value>
+            <value>
+                <fullName>Missing</fullName>
+                <default>true</default>
+                <label>N/A</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

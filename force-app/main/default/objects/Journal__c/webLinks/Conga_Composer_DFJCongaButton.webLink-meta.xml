@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Conga_Composer_DFJCongaButton</fullName>
+    <availability>online</availability>
+    <description>Originally created by Conga Solution Manager. Date of last use of Update Button from Conga Solution record: https://dfj--apxtconga4.visualforce.com/a0V1t00000WwtFtEAJ
+18-May-2020 03:05:23 PM</description>
+    <displayType>button</displayType>
+    <encodingKey>UTF-8</encodingKey>
+    <hasMenubar>false</hasMenubar>
+    <hasScrollbars>false</hasScrollbars>
+    <hasToolbar>false</hasToolbar>
+    <height>660</height>
+    <isResizable>false</isResizable>
+    <linkType>url</linkType>
+    <masterLabel>DFJCongaButton</masterLabel>
+    <openType>newWindow</openType>
+    <position>none</position>
+    <protected>false</protected>
+    <showsLocation>false</showsLocation>
+    <showsStatus>false</showsStatus>
+    <url>/apex/APXTConga4__Conga_Composer?SolMgr=1
+&amp;serverUrl={!API.Partner_Server_URL_370}
+&amp;Id={!Journal__c.Id}
+
+&amp;QueryId=[DFJProcuratorPri]a0P1t00000HwBi5,
+[DFJGuardianPri]a0P1t00000HwBiC,
+[DFJSpouse2]a0P1t00000HwBiD,
+[DFJProcuratorSec]a0P1t00000HwBi9,
+[DFJChildAll]a0P1t00000HwBiB,
+[DFJGuardianSec]a0P1t00000HwBiF,
+[DFJGuardian]a0P1t00000HwBi8,
+[DFJSpouse1]a0P1t00000HwBi7,
+[DFJChildBoth]a0P1t00000HwBiE,
+[DFJUnwanted]a0P1t00000HwBiA,
+[DFJChildCommonCustod]a0P1t00000HwBi4,
+[DFJChildDividedCusto]a0P1t00000HwBi3,
+[DFJGifts]a0P1t00000HwBi6,
+[DFJChildFullCustody]a0P1t00000Hwklf,
+[DFJProcurSp1]a0P1t00000J29Aq,
+[DFJProcurSp2]a0P1t00000J29LZ,
+[DFJAssMoney]a0P1t00000Ld6FU,
+[DFJChildSp1]a0P1t00000Ld6UF,
+[DFJChildSp2]a0P1t00000LeHiy,
+[DFJChildBothParrents]a0P1t00000LeHjD,
+[DFJAssThings]a0P1t00000Ld6K0,
+[DFJJPicklist]a0P5J000000xckI,
+[DFJHeir1]a0P5J000000oqLr
+
+&amp;SC0=1
+&amp;SC1=Attachments</url>
+    <width>900</width>
+</WebLink>

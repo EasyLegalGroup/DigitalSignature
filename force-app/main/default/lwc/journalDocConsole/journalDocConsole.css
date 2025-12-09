@@ -1,0 +1,166 @@
+/* Journal Doc Console styles
+   -------------------------------------------------------------- */
+
+/* --- layout helpers --- */
+.header-box {                       /* card header area            */
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem !important; /* slimmer than default        */
+}
+
+.row-box {                          /* each document "card"        */
+  border-radius: 0.5rem;
+  transition: box-shadow .15s ease;
+  padding: 0.5rem 0.75rem;          /* tighter vertical spacing    */
+  display: flex;
+  flex-direction: column;           /* three stacked rows          */
+  position: relative;               /* for top-right info badge    */
+}
+.row-box:hover { box-shadow: 0 2px 6px rgba(0,0,0,.1); }
+
+/* blocked approval container (red tint) */
+.row-box.blocked-approval {
+  background-color: rgba(255, 87, 87, 0.08);
+  border-left: 3px solid rgba(234, 67, 53, 0.5);
+}
+
+/* header controls (file-picker & button) */
+.header-control {
+  --slds-c-input-spacing-horizontal: 0.25rem; /* collapse default gap  */
+  margin-bottom: 0.25rem;
+}
+/* add an extra gap between the two header controls */
+.header-control + .header-control { margin-left: 0.5rem; }
+
+.banner { border-radius: .25rem; }
+
+/* --- document-row specifics --- */
+.name-row {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.doc-name {
+  font-weight: 600;
+  margin-bottom: 0.1rem;
+  max-width: 100%;
+  min-width: 0; /* allow slds-truncate to work inside flex */
+}
+
+/* document type combobox row */
+.type-row {
+  margin: 0.15rem 0 0.15rem 0; /* tighten spacing above & below */
+  width: 100%;
+}
+.type-combobox {
+  width: 100%;
+}
+
+.pill-row .slds-badge { margin-right: .25rem; }
+.slds-badge { font-weight: 600; }   /* tighten all badges */
+
+/* right-hand group */
+.right-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+/* legacy sent label (no longer used) */
+.sent-label {
+  font-size: .8rem;
+  color: #444;
+  margin-right: .25rem;
+  white-space: nowrap;
+}
+
+/* --- Status-specific badge colours --- */
+.badge-draft       { background:#9e9e9e; color:#fff; }
+.badge-sent        { background:#0070d2; color:#fff; }
+.badge-viewed      { background:#ffb75d; color:#fff; }
+.badge-approved    { background:#2e844a; color:#fff; }
+.badge-superseded  { background:#653c97; color:#fff; }
+
+/* ========== Info bubble (top-right tooltip) ========== */
+.info-badge { position: absolute; top: 6px; right: 8px; }
+.info-badge .tip {
+  display: none;
+  position: absolute;
+  top: 24px;        /* below the icon */
+  right: 0;
+  z-index: 2;
+}
+.info-badge:hover .tip { display: block; }
+
+.tip-list { margin: 0; padding-left: 1rem; }
+.tip-list li { white-space: nowrap; }
+
+/* ========== Tiny success flash (now next to file name) ========== */
+.type-saved {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  animation: jd-fadeout 1.1s ease-in forwards;
+}
+.type-saved .type-saved-icon,
+.type-saved .type-saved-text {
+  color: var(--slds-g-color-success-base-50, #2e844a);
+}
+.type-saved .type-saved-text {
+  font-size: .75rem;
+  font-weight: 600;
+}
+
+@keyframes jd-fadeout {
+  0%   { opacity: 1; transform: translateY(0); }
+  80%  { opacity: .6; }
+  100% { opacity: 0; transform: translateY(-2px); }
+}
+
+/* ========== Drag & Drop (Newest tab) ========== */
+.drag-handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  padding: 2px;
+  border-radius: 4px;
+}
+.drag-handle:active { cursor: grabbing; }
+
+/* highlight drop target row */
+.row-box.drag-over {
+  outline: 2px dashed #98a2b3; /* subtle neutral */
+  outline-offset: 2px;
+}
+
+/* dragging ghost element that follows cursor */
+.drag-ghost {
+  position: fixed;
+  z-index: 10000;
+  pointer-events: none;
+  opacity: 0.85;
+  background: white;
+  border: 2px solid #0070d2;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+  color: #0070d2;
+  transform: translate(-50%, -50%);
+}
+
+/* dim the original item being dragged */
+.row-box.dragging {
+  opacity: 0.4;
+}
+
+/* ========== Busy overlay to block UI during long operations ========== */
+.busy-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+}

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Phone_Formatted__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(
+BEGINS(SUBSTITUTE(Phone__c , &quot; &quot;, &quot;&quot;), &apos;+45&apos;),
+SUBSTITUTE(Phone__c , &quot; &quot;, &quot;&quot;),
+IF(
+BEGINS(SUBSTITUTE(Phone__c , &quot; &quot;, &quot;&quot;), &apos;45&apos;),
+&apos;+&apos; + SUBSTITUTE(Phone__c , &quot; &quot;, &quot;&quot;),
+IF(
+AND(
+NOT(BEGINS(SUBSTITUTE(Phone__c , &quot; &quot;, &quot;&quot;), &apos;+45&apos;)),
+OR(
+ISPICKVAL(Market_Unit__c, &apos;DFJ_DK&apos;),
+ISPICKVAL(Market_Unit__c, &apos;Testamente_DK&apos;)
+)
+),
+&apos;+45&apos; + SUBSTITUTE(Phone__c , &quot; &quot;, &quot;&quot;),
+IF(
+AND(
+NOT(BEGINS(SUBSTITUTE(Phone__c , &quot; &quot;, &quot;&quot;), &apos;+&apos;)),
+OR(
+ISPICKVAL(Market_Unit__c, &apos;DFJ_DK&apos;),
+ISPICKVAL(Market_Unit__c, &apos;Testamente_DK&apos;)
+)
+),
+&apos;+&apos; + SUBSTITUTE(Phone__c , &quot; &quot;, &quot;&quot;),
+IF(
+BEGINS(SUBSTITUTE(Phone__c , &quot; &quot;, &quot;&quot;), &apos;+46&apos;),
+SUBSTITUTE(Phone__c , &quot; &quot;, &quot;&quot;),
+IF(
+BEGINS(SUBSTITUTE(Phone__c , &quot; &quot;, &quot;&quot;), &apos;46&apos;),
+&apos;+&apos; + SUBSTITUTE(Phone__c , &quot; &quot;, &quot;&quot;),
+IF(
+AND(
+NOT(BEGINS(SUBSTITUTE(Phone__c , &quot; &quot;, &quot;&quot;), &apos;+46&apos;)),
+ISPICKVAL(Market_Unit__c, &apos;FA_SE&apos;)
+),
+&apos;+46&apos; + SUBSTITUTE(Phone__c , &quot; &quot;, &quot;&quot;),
+IF(
+AND(
+NOT(BEGINS(SUBSTITUTE(Phone__c , &quot; &quot;, &quot;&quot;), &apos;+&apos;)),
+ISPICKVAL(Market_Unit__c, &apos;FA_SE&apos;)
+),
+&apos;+&apos; + SUBSTITUTE(Phone__c , &quot; &quot;, &quot;&quot;),
+SUBSTITUTE(Phone__c , &quot; &quot;, &quot;&quot;)
+)
+)
+)
+)
+)
+)
+)
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Phone Formatted</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

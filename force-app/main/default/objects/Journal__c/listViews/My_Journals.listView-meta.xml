@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>My_Journals</fullName>
+    <columns>NAME</columns>
+    <columns>GA_Reply_Status__c</columns>
+    <columns>Awaiting_agent_since__c</columns>
+    <columns>Awaiting_customer_since__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Account__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <filters>
+        <field>Journal_States__c</field>
+        <operation>equals</operation>
+        <value>Gennemgang Get Accept</value>
+    </filters>
+    <filters>
+        <field>Is_Current_User_Responsible_Lawyer__c</field>
+        <operation>equals</operation>
+        <value>1</value>
+    </filters>
+    <label>My Journals</label>
+</ListView>

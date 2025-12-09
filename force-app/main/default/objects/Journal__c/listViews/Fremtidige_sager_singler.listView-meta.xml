@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Fremtidige_sager_singler</fullName>
+    <columns>NAME</columns>
+    <columns>Account__c</columns>
+    <columns>OWNER.FIRST_NAME</columns>
+    <columns>journal_Deadline__c</columns>
+    <columns>Civil_Status__c</columns>
+    <columns>Children_type__c</columns>
+    <columns>inheritance_from_first__c</columns>
+    <columns>inheritance_from_longest_lived__c</columns>
+    <columns>CREATEDBY_USER</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>Journal_States__c</columns>
+    <columns>LAST_UPDATE</columns>
+    <columns>Has_Children_P__c</columns>
+    <columns>First_Include_Future_Children_P__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Civil_Status__c</field>
+        <operation>equals</operation>
+        <value>Single</value>
+    </filters>
+    <filters>
+        <field>Journal_States__c</field>
+        <operation>equals</operation>
+        <value>client_review</value>
+    </filters>
+    <filters>
+        <field>Account__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <label>Fremtidige sager singler</label>
+</ListView>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Test_1</fullName>
+    <columns>NAME</columns>
+    <columns>Account__c</columns>
+    <columns>journal_Deadline__c</columns>
+    <columns>OWNER.FIRST_NAME</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Journal_States__c</field>
+        <operation>equals</operation>
+        <value>new,draft,client_review,public_registration,Ikke afsendt,Misc opfølgning</value>
+    </filters>
+    <filters>
+        <field>OWNER.ALIAS</field>
+        <operation>equals</operation>
+        <value>Sofus</value>
+    </filters>
+    <filters>
+        <field>Account__c</field>
+        <operation>contains</operation>
+        <value>Jensen</value>
+    </filters>
+    <filters>
+        <field>Account__c</field>
+        <operation>notContain</operation>
+        <value>Line</value>
+    </filters>
+    <label>Test_1</label>
+</ListView>

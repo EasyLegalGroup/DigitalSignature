@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Retskreds__c</fullName>
+    <label>Retskreds</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Københavns Byret</fullName>
+                <default>false</default>
+                <label>Københavns Byret</label>
+            </value>
+            <value>
+                <fullName>Retten på Bornholm</fullName>
+                <default>false</default>
+                <label>Retten på Bornholm</label>
+            </value>
+            <value>
+                <fullName>Retten i Esbjerg</fullName>
+                <default>false</default>
+                <label>Retten i Esbjerg</label>
+            </value>
+            <value>
+                <fullName>Retten på Frederiksberg</fullName>
+                <default>false</default>
+                <label>Retten på Frederiksberg</label>
+            </value>
+            <value>
+                <fullName>Retten i Glostrup</fullName>
+                <default>false</default>
+                <label>Retten i Glostrup</label>
+            </value>
+            <value>
+                <fullName>Retten i Helsingør</fullName>
+                <default>false</default>
+                <label>Retten i Helsingør</label>
+            </value>
+            <value>
+                <fullName>Retten i Herning</fullName>
+                <default>false</default>
+                <label>Retten i Herning</label>
+            </value>
+            <value>
+                <fullName>Retten i Hillerød</fullName>
+                <default>false</default>
+                <label>Retten i Hillerød</label>
+            </value>
+            <value>
+                <fullName>Retten i Hjørring</fullName>
+                <default>false</default>
+                <label>Retten i Hjørring</label>
+            </value>
+            <value>
+                <fullName>Retten i Holbæk</fullName>
+                <default>false</default>
+                <label>Retten i Holbæk</label>
+            </value>
+            <value>
+                <fullName>Retten i Holstebro</fullName>
+                <default>false</default>
+                <label>Retten i Holstebro</label>
+            </value>
+            <value>
+                <fullName>Retten i Horsens</fullName>
+                <default>false</default>
+                <label>Retten i Horsens</label>
+            </value>
+            <value>
+                <fullName>Retten i Kolding</fullName>
+                <default>false</default>
+                <label>Retten i Kolding</label>
+            </value>
+            <value>
+                <fullName>Retten i Lyngby</fullName>
+                <default>false</default>
+                <label>Retten i Lyngby</label>
+            </value>
+            <value>
+                <fullName>Retten i Nykøbing F</fullName>
+                <default>false</default>
+                <label>Retten i Nykøbing F</label>
+            </value>
+            <value>
+                <fullName>Retten i Næstved (hovedkontor)</fullName>
+                <default>false</default>
+                <label>Retten i Næstved (hovedkontor)</label>
+            </value>
+            <value>
+                <fullName>Retten i Næstved (bitingsted)</fullName>
+                <default>false</default>
+                <label>Retten i Næstved (bitingsted)</label>
+            </value>
+            <value>
+                <fullName>Retten i Odense</fullName>
+                <default>false</default>
+                <label>Retten i Odense</label>
+            </value>
+            <value>
+                <fullName>Retten i Randers</fullName>
+                <default>false</default>
+                <label>Retten i Randers</label>
+            </value>
+            <value>
+                <fullName>Retten i Roskilde</fullName>
+                <default>false</default>
+                <label>Retten i Roskilde</label>
+            </value>
+            <value>
+                <fullName>Retten i Svendborg</fullName>
+                <default>false</default>
+                <label>Retten i Svendborg</label>
+            </value>
+            <value>
+                <fullName>Retten i Sønderborg</fullName>
+                <default>false</default>
+                <label>Retten i Sønderborg</label>
+            </value>
+            <value>
+                <fullName>Retten i Viborg</fullName>
+                <default>false</default>
+                <label>Retten i Viborg</label>
+            </value>
+            <value>
+                <fullName>Retten i Aalborg</fullName>
+                <default>false</default>
+                <label>Retten i Aalborg</label>
+            </value>
+            <value>
+                <fullName>Retten i Aarhus</fullName>
+                <default>false</default>
+                <label>Retten i Aarhus</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

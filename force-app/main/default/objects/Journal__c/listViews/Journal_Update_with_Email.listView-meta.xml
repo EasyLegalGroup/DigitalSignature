@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Journal_Update_with_Email</fullName>
+    <booleanFilter>1 AND (2 OR (3 AND 4))</booleanFilter>
+    <columns>NAME</columns>
+    <columns>Account__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>Civil_Status__c</columns>
+    <columns>CREATEDBY_USER</columns>
+    <columns>Journal_States__c</columns>
+    <columns>Order__c</columns>
+    <columns>Account_Phone__c</columns>
+    <columns>Amount__c</columns>
+    <columns>UPDATEDBY_USER</columns>
+    <columns>LAST_UPDATE</columns>
+    <columns>Market_Unit__c</columns>
+    <columns>OWNER.FIRST_NAME</columns>
+    <columns>Responsible_Lawyer__c</columns>
+    <columns>Seperate_Property__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Market_Unit__c</field>
+        <operation>equals</operation>
+        <value>DFJ_DK</value>
+    </filters>
+    <filters>
+        <field>Journal_States__c</field>
+        <operation>notEqual</operation>
+        <value>complete,Færdig + Servicekald ikke besvaret,Færdig + Servicekald,Færdig - Ægtepagt anmeldelse,Færdig Færdig,Færdig ny process</value>
+    </filters>
+    <filters>
+        <field>Journal_States__c</field>
+        <operation>equals</operation>
+        <value>Gennemgang Get Accept</value>
+    </filters>
+    <filters>
+        <field>Responsible_Lawyer__c</field>
+        <operation>equals</operation>
+        <value>Ditte Christiansen</value>
+    </filters>
+    <label>Journal Update with Email</label>
+</ListView>

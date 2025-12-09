@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <title>DFJ Dokumentgodkendelse</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="stylesheet" href="styles.css">
+
+  <script defer src="brand.js"></script>
+  <script defer src="texts.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+
+  <!-- brand bar ------------------------------------------------------------- -->
+  <header class="brand-bar">
+    <button id="menuBtn" class="menu-btn" aria-label="Menu">☰</button>
+    <img id="brandLogo" src="logo.png" alt="Din Familiejurist" class="brand-logo">
+    <span class="tagline">Din Familiejurist</span>
+    <span id="journalName" class="journal-name hidden"></span>
+  </header>
+
+  <!-- spinner ---------------------------------------------------------------- -->
+  <div id="loadingOverlay" class="overlay hidden"><div class="spinner"></div></div>
+
+  <!-- OTP / Identifier start ------------------------------------------------- -->
+  <div class="card otp-card" id="otpCard">
+    <h1 data-i18n="OTP_TITLE"></h1>
+    <!-- NEW subtitle; contains {btn} token replaced in app.js -->
+    <p data-i18n="OTP_SUBTITLE" class="muted"></p>
+
+    <!-- STEP 1: identifier (phone/email) + request OTP -->
+    <div id="idStep">
+      <div id="idChooser" class="id-chooser">
+        <div class="id-toggle">
+          <button type="button" id="usePhoneBtn" class="active" data-i18n="OTP_USE_PHONE"></button>
+          <button type="button" id="useEmailBtn" data-i18n="OTP_USE_EMAIL"></button>
+        </div>
+
+        <form id="idForm" class="id-form">
+          <!-- Phone group (shown when “Telefon” is active) -->
+          <div id="phoneGroup" class="phone-group">
+            <div class="phone-chooser">
+              <div class="phone-wrap">
+                <button id="phoneCountryBtn" type="button" class="phone-country-btn" data-iso="" data-dial=""></button>
+                <div id="phoneDropdown" class="phone-dropdown hidden"></div>
+              </div>
+              <input id="phoneLocal" autocomplete="tel" inputmode="tel" placeholder="12 34 56 78">
+            </div>
+          </div>
+
+          <!-- Email group (shown when “E-mail” is active) -->
+          <div id="emailGroup" class="hidden">
+            <input id="emailInput" type="email" autocomplete="email" placeholder="navn@email.dk">
+          </div>
+
+          <button id="requestOtpBtn" class="primary" type="submit" data-i18n="OTP_RESEND_BTN"></button>
+        </form>
+
+        <div id="idMsg" class="id-msg"></div>
+      </div>
+    </div>
+
+    <!-- STEP 2: verify-only (OTP input + Verify + Start over) -->
+    <div id="verifyStep" class="hidden">
+      <button id="startOverBtn" class="ghost danger start-over-btn" data-i18n="START_OVER_BTN">Start forfra</button>
+      
+      <p id="verifySub" class="verify-sub"></p>
+
+      <form id="otpForm" class="otp-form">
+        <input id="otp" maxlength="6" autocomplete="one-time-code" inputmode="numeric" required>
+        <button class="primary" data-i18n="OTP_VERIFY_BTN"></button>
+      </form>
+
+      <div id="msg" class="otp-msg"></div>
+    </div>
+  </div>
+
+  <!-- Sidebar ---------------------------------------------------------------- -->
+  <aside class="card sidebar hidden" id="sidebar">
+    <button id="approveAllBtn" class="ghost approve-all-top hidden" data-i18n="APPROVE_ALL_BTN"></button>
+
+    <div class="doc-group-header">
+      <span data-i18n="SIDEBAR_PENDING"></span> (<span id="pendingCount">0</span>)
+    </div>
+    
+    <div class="sidebar-actions hidden" id="backToJournalsActions">
+      <button id="backToJournalsBtn" class="ghost colorful" data-i18n="BACK_TO_OVERVIEW"></button>
+    </div>
+    
+    <div id="pendingList" class="doc-list"></div>
+
+    <hr class="sidebar-sep">
+
+    <div class="doc-group-header">
+      <span data-i18n="SIDEBAR_APPROVED"></span> (<span id="approvedCount">0</span>)
+    </div>
+    <div id="approvedList" class="doc-list"></div>
+
+    <div class="sidebar-actions hidden" id="sidebarActions">
+      <button id="tourRelaunchBtn" class="ghost colorful" data-i18n="TOUR_RELAUNCH"></button>
+      <button id="faqBtn" class="ghost colorful" data-i18n="FAQ_BTN"></button>
+    </div>
+  </aside>
+
+  <!-- Viewer ----------------------------------------------------------------- -->
+  <div class="viewer-container hidden" id="viewerCard">
+
+    <div id="pageHeader" class="page-header">
+      <h2 id="headerText" data-i18n="HEADER_PENDING"></h2>
+
+      <button id="introBtn" class="ghost video-btn colorful" data-i18n="INTRO_BTN"></button>
+      <button id="printBtn" class="ghost colorful3" data-i18n="PRINT_BTN"></button>
+      <button id="downloadBtn" class="ghost colorful2" data-i18n="DOWNLOAD_BTN"></button>
+      <button id="viewCompletionBtn" class="ghost colorful hidden" data-i18n="POST_APPROVAL_VIEW_BTN"></button>
+    </div>
+
+    <!-- Mobile PDF viewer tip banner -->
+    <div id="pdfViewerTip" class="pdf-viewer-tip" data-i18n="PDF_VIEWER_TIP"></div>
+
+    <div class="viewer-wrap">
+      <iframe id="pdf" title="Document viewer"></iframe>
+    </div>
+
+    <div id="approveRow" class="approve-row">
+      <button id="approveBtn" class="primary"></button>
+      <span id="approveMsg" class="muted small"></span>
+    </div>
+  </div>
+
+  <!-- Intro-video modal ------------------------------------------------------ -->
+  <div id="introModal" class="modal-overlay hidden">
+    <div class="modal intro">
+      <button id="introCloseBtn" class="close" aria-label="Luk">✕</button>
+      <div class="modal-body">
+        <h2 data-i18n="INTRO_TITLE"></h2>
+
+        <h3 data-i18n="INTRO_H3A"></h3>
+        <div data-i18n-html="INTRO_P1"></div>
+
+        <h3 data-i18n="INTRO_H3B"></h3>
+        <div data-i18n-html="INTRO_P2"></div>
+
+        <div class="video-wrapper">
+          <iframe id="videoFrame" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+
+        <div class="modal-actions">
+          <button id="introOkayBtn" class="primary" data-i18n="INTRO_CLOSE_BTN"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ modal -------------------------------------------------------------- -->
+  <div id="faqModal" class="modal-overlay hidden">
+    <div class="modal intro">
+      <button id="faqCloseBtn" class="close" aria-label="Luk">✕</button>
+      <div class="modal-body">
+        <h2 data-i18n="FAQ_TITLE"></h2>
+
+        <button class="acc-header" data-i18n="FAQ_SECTION1"></button>
+        <div class="acc-content hidden" data-i18n-html="FAQ_SECTION1_BODY"></div>
+
+        <button class="acc-header" data-i18n="FAQ_SECTION2"></button>
+        <div class="acc-content hidden" data-i18n-html="FAQ_SECTION2_BODY"></div>
+
+        <button class="acc-header" data-i18n="FAQ_SECTION3"></button>
+        <div class="acc-content hidden" data-i18n-html="FAQ_SECTION3_BODY"></div>
+
+        <button class="acc-header" data-i18n="FAQ_SECTION4"></button>
+        <div class="acc-content hidden" data-i18n-html="FAQ_SECTION4_BODY"></div>
+
+        <div class="modal-actions">
+          <button id="faqOkayBtn" class="primary" data-i18n="FAQ_CLOSE_BTN"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm-approval modal -------------------------------------------------- -->
+  <div id="confirmModal" class="modal-overlay hidden">
+    <div class="modal large">
+      <button id="confirmCancel"  class="close" aria-label="Luk">✕</button>
+      <div class="modal-body">
+        <p id="confirmText"></p>
+        <div class="modal-actions">
+          <button id="confirmCancel2" class="ghost" data-i18n="MODAL_CANCEL"></button>
+          <button id="confirmApprove" class="primary"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Completion modal ------------------------------------------------------- -->
+  <div id="completionModal" class="modal-overlay hidden">
+    <div class="modal intro">
+      <button id="completionCloseBtn" class="close" aria-label="Luk">✕</button>
+      <div class="modal-body">
+        <h2 data-i18n="POST_APPROVAL_TITLE"></h2>
+
+        <h3 data-i18n="POST_APPROVAL_H3A"></h3>
+        <div data-i18n-html="POST_APPROVAL_P1"></div>
+
+        <h3 data-i18n="POST_APPROVAL_H3B"></h3>
+        <div data-i18n-html="POST_APPROVAL_P2"></div>
+
+        <div class="modal-actions">
+          <!-- NEW: show these inside the modal too; manual click only -->
+          <button id="completionDownloadBtn" class="ghost colorful2" data-i18n="DOWNLOAD_BTN"></button>
+          <button id="completionPrintBtn" class="ghost colorful3" data-i18n="PRINT_BTN"></button>
+          <button id="completionOkayBtn" class="primary" data-i18n="POST_APPROVAL_CLOSE_BTN"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat ------------------------------------------------------------------- -->
+  <button id="chatFab" class="hidden"></button>
+  <div id="chatLabel" class="chat-label hidden" data-i18n="CHAT_LABEL"></div>
+
+  <div id="chatPanel" class="hidden">
+    <div id="chatHeader" class="chat-header" data-i18n="CHAT_HEADER"></div>
+    
+    <!-- Pinned disclaimer banner -->
+    <div id="chatDisclaimer" class="chat-disclaimer" data-i18n="CHAT_DISCLAIMER">
+      <button id="chatDisclaimerClose" class="chat-disclaimer-close" aria-label="Close">✕</button>
+    </div>
+    
+    <div id="chatList" class="chat-list" data-i18n-empty="CHAT_NO_MESSAGES"></div>
+
+    <div class="chat-input">
+      <div class="chat-tools">
+        <button data-cmd="bold"><strong>B</strong></button>
+        <button data-cmd="italic"><em>I</em></button>
+        <button data-cmd="underline"><u>U</u></button>
+        <button data-cmd="insertUnorderedList">•</button>
+      </div>
+      <div id="chatEditor" class="chat-editor" placeholder="" contenteditable="true"></div>
+      <button id="chatSend" class="primary" style="padding:8px 14px;margin-top:6px">Send</button>
+    </div>
+  </div>
+
+  <!-- Tour overlay ----------------------------------------------------------- -->
+  <div id="tourDim" class="hidden"></div>
+  <div id="tourRing" class="hidden"></div>
+  <div id="tourTip" class="hidden">
+    <div id="tourCounter" class="tour-counter"></div>
+    <div id="tourTipText"></div>
+    <div class="tour-actions">
+      <button id="tourCloseBtn" class="ghost" data-i18n="TOUR_CLOSE"></button>
+      <button id="tourBackBtn" class="ghost" data-i18n="TOUR_BACK"></button>
+      <button id="tourNextBtn" class="primary" data-i18n="TOUR_NEXT"></button>
+      <button id="tourDoneBtn" class="ghost" data-i18n="TOUR_DONE"></button>
+    </div>
+  </div>
+
+  <footer class="site-footer" data-i18n-html="FOOTER_TEXT"></footer>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>No_Formula_Fields_Available__c</fullName>
+    <description>##Conga created button:00b6E000000We7V</description>
+    <externalId>false</externalId>
+    <formula>&quot;&amp;solmgr=1&quot; + 
+&quot;&amp;id=&quot; + Id +
+&quot;&amp;queryid=[TypeSpouse1]a0L6E000003FEVZ,[Spouse2]a0L6E000003FEVe,[Typeischild]a0L6E000003FEVo,[AssetHair]a0L6E000003FG2X,[blcaksheep]a0L6E000003FG4K,[SPTCombinationKombin]a0L6E000003FG5D,[Fuldstndigtsrejefora]a0L6E000003FGRA,[Fuldstndigtsrejemeds]a0L6E000003FGRK,[Guardian]a0L6E000003FGSv&quot; + 
+&quot;&amp;selecttemplates=1&quot; + 
+&quot;&amp;qmode=Documents&quot;</formula>
+    <label>No Formula Fields Available</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

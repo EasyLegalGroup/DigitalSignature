@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Arv_fra_l_ngstlevende__c</fullName>
+    <label>Arv fra længstlevende</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Ligedeling **</fullName>
+                <default>false</default>
+                <label>Ligedeling **</label>
+            </value>
+            <value>
+                <fullName>Arv efter gren **</fullName>
+                <default>false</default>
+                <label>Arv efter gren **</label>
+            </value>
+            <value>
+                <fullName>Procentfordeling **</fullName>
+                <default>false</default>
+                <label>Procentfordeling **</label>
+            </value>
+            <value>
+                <fullName>Sort får</fullName>
+                <default>false</default>
+                <label>Sort får</label>
+            </value>
+            <value>
+                <fullName>Hvidt lam</fullName>
+                <default>false</default>
+                <label>Hvidt lam</label>
+            </value>
+            <value>
+                <fullName>Børnebørn</fullName>
+                <default>false</default>
+                <label>Børnebørn</label>
+            </value>
+            <value>
+                <fullName>NGO</fullName>
+                <default>false</default>
+                <label>NGO</label>
+            </value>
+            <value>
+                <fullName>30 pct løsning</fullName>
+                <default>false</default>
+                <label>30 pct løsning</label>
+            </value>
+            <value>
+                <fullName>Missing</fullName>
+                <default>true</default>
+                <label>N/A</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

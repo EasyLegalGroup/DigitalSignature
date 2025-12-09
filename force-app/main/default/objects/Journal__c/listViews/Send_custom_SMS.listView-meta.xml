@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Send_custom_SMS</fullName>
+    <columns>NAME</columns>
+    <columns>Account__c</columns>
+    <columns>Journal_States__c</columns>
+    <columns>Market_Unit__c</columns>
+    <columns>OWNER.FIRST_NAME</columns>
+    <columns>Responsible_Lawyer__c</columns>
+    <columns>Account_Phone_Formatted__c</columns>
+    <columns>Send_custom_SMS__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Journal_States__c</field>
+        <operation>equals</operation>
+        <value>Intern ny - Ekstern</value>
+    </filters>
+    <filters>
+        <field>Market_Unit__c</field>
+        <operation>equals</operation>
+        <value>DFJ_DK,Testamente_DK</value>
+    </filters>
+    <label>Send custom SMS</label>
+</ListView>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Active_journals</fullName>
+    <columns>NAME</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>Account__c</columns>
+    <columns>journal_Deadline__c</columns>
+    <columns>OWNER.FIRST_NAME</columns>
+    <columns>Original_Lawyer__c</columns>
+    <columns>Responsible_Lawyer__c</columns>
+    <columns>Journal_States__c</columns>
+    <columns>Arv_fra_f_rste_afd_de__c</columns>
+    <columns>Arv_fra_l_ngstlevende__c</columns>
+    <columns>Is_2_mutual_procurations__c</columns>
+    <columns>Created_date_time_journal__c</columns>
+    <columns>Deadline_overdue_days__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Responsible_Lawyer__c</field>
+        <operation>equals</operation>
+        <value>Charlotte Kristjansson</value>
+    </filters>
+    <filters>
+        <field>Journal_States__c</field>
+        <operation>equals</operation>
+        <value>Gennemgang Get Accept</value>
+    </filters>
+    <label>All active journals</label>
+</ListView>

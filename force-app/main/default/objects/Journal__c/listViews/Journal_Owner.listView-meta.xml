@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Journal_Owner</fullName>
+    <columns>NAME</columns>
+    <columns>Account__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>journal_Deadline__c</columns>
+    <columns>OWNER.FIRST_NAME</columns>
+    <columns>Market_Unit__c</columns>
+    <columns>Responsible_Lawyer__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Journal_States__c</field>
+        <operation>notEqual</operation>
+        <value>complete,canceled,Oprydning</value>
+    </filters>
+    <label>Journal Owner</label>
+</ListView>

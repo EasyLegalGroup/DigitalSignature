@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All_Journals_deadline_overdue</fullName>
+    <booleanFilter>1 AND 2</booleanFilter>
+    <columns>NAME</columns>
+    <columns>Account__c</columns>
+    <columns>Order__c</columns>
+    <columns>Lead__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>Responsible_Lawyer__c</columns>
+    <columns>CREATEDBY_USER.ALIAS</columns>
+    <columns>journal_Deadline__c</columns>
+    <columns>OWNER.FIRST_NAME</columns>
+    <columns>Journal_States__c</columns>
+    <columns>Civil_Status__c</columns>
+    <columns>LAST_ACTIVITY</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Journal_States__c</field>
+        <operation>equals</operation>
+        <value>new,Intern - Ny haster,Intern ny - Ekstern</value>
+    </filters>
+    <filters>
+        <field>Account__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <label>All Journals deadline overdue</label>
+</ListView>

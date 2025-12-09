@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Public_Registration_Status__c</fullName>
+    <label>Public Registration Status</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Pending Approval</fullName>
+                <default>false</default>
+                <label>Pending Approval</label>
+            </value>
+            <value>
+                <fullName>Ready for Public Registration</fullName>
+                <default>false</default>
+                <label>Ready for Public Registration</label>
+            </value>
+            <value>
+                <fullName>Public Registration Complete</fullName>
+                <default>false</default>
+                <label>Public Registration Complete</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

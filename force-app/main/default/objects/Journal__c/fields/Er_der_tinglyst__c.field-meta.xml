@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Er_der_tinglyst__c</fullName>
+    <label>Er der tinglyst?</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Ikke relevant</fullName>
+                <default>true</default>
+                <label>Ikke relevant</label>
+            </value>
+            <value>
+                <fullName>Ikke tinglyst</fullName>
+                <default>false</default>
+                <label>Ikke tinglyst</label>
+            </value>
+            <value>
+                <fullName>Tinglyst</fullName>
+                <default>false</default>
+                <label>Tinglyst</label>
+            </value>
+            <value>
+                <fullName>Ægtepagt - Anmeldt</fullName>
+                <default>false</default>
+                <label>Ægtepagt - Anmeldt</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

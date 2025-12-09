@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Journals_without_Accounts</fullName>
+    <columns>NAME</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>Account__c</columns>
+    <columns>journal_Deadline__c</columns>
+    <columns>OWNER.FIRST_NAME</columns>
+    <columns>Original_Lawyer__c</columns>
+    <columns>Responsible_Lawyer__c</columns>
+    <columns>Journal_States__c</columns>
+    <columns>Arv_fra_f_rste_afd_de__c</columns>
+    <columns>Arv_fra_l_ngstlevende__c</columns>
+    <columns>Is_2_mutual_procurations__c</columns>
+    <columns>Created_date_time_journal__c</columns>
+    <columns>Deadline_overdue_days__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Account__c</field>
+        <operation>equals</operation>
+    </filters>
+    <filters>
+        <field>Market_Unit__c</field>
+        <operation>equals</operation>
+        <value>DFJ_DK,Testamente_DK</value>
+    </filters>
+    <label>Journals without Accounts</label>
+</ListView>

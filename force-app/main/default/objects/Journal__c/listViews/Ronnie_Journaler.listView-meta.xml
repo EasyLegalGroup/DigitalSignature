@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Ronnie_Journaler</fullName>
+    <columns>NAME</columns>
+    <columns>Account__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>journal_Deadline__c</columns>
+    <columns>OWNER.FIRST_NAME</columns>
+    <columns>Market_Unit__c</columns>
+    <columns>Responsible_Lawyer__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Trustpilot_Reply_Result__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <label>Ronnie Journaler</label>
+</ListView>

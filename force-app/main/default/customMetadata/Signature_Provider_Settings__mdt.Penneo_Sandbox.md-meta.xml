@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Penneo Sandbox</label>
+    <protected>false</protected>
+    <values>
+        <field>Environment__c</field>
+        <value xsi:type="xsd:string">sandbox</value>
+    </values>
+    <values>
+        <field>Is_Active__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>OAuth_Token_Endpoint__c</field>
+        <value xsi:type="xsd:string">https://sandbox.oauth.penneo.cloud/oauth/token</value>
+    </values>
+    <values>
+        <field>API_Base_URL__c</field>
+        <value xsi:type="xsd:string">https://sandbox.penneo.com/api/v3</value>
+    </values>
+    <values>
+        <field>Send_API_Base_URL__c</field>
+        <value xsi:type="xsd:string">https://sandbox.penneo.com/send/api/v1</value>
+    </values>
+    <values>
+        <field>OAuth_Client_ID__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>OAuth_Client_Secret__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>API_Key__c</field>
+        <value xsi:type="xsd:string">ee9907e61f65e58b01c57e0cedf4a3982c827f6abe108fb04b7003e55987f258</value>
+    </values>
+    <values>
+        <field>API_Secret__c</field>
+        <value xsi:type="xsd:string">e34c4a2297df0659e3a2d6fb8e6d0984a89408ecf975b04e3707fb3f126fef06</value>
+    </values>
+    <values>
+        <field>Webhook_Secret__c</field>
+        <value xsi:nil="true"/>
+    </values>
+</CustomMetadata>

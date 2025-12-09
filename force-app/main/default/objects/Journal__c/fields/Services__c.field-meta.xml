@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Services__c</fullName>
+    <label>Services</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>(Samliv) Ægtepagt inkl. tinglysning</fullName>
+                <default>false</default>
+                <label>(Samliv) Ægtepagt inkl. tinglysning</label>
+            </value>
+            <value>
+                <fullName>(Samliv) Samejeoverenskomst</fullName>
+                <default>false</default>
+                <label>(Samliv) Samejeoverenskomst</label>
+            </value>
+            <value>
+                <fullName>(Samliv) Gældsbrev</fullName>
+                <default>false</default>
+                <label>(Samliv) Gældsbrev</label>
+            </value>
+            <value>
+                <fullName>(Samliv) Arveafkald</fullName>
+                <default>false</default>
+                <label>(Samliv) Arveafkald</label>
+            </value>
+            <value>
+                <fullName>(Samliv) Arveforskudskontrakt</fullName>
+                <default>false</default>
+                <label>(Samliv) Arveforskudskontrakt</label>
+            </value>
+            <value>
+                <fullName>(Sygdom) Fremtidsfuldmagt inkl. tinglysning</fullName>
+                <default>false</default>
+                <label>(Sygdom) Fremtidsfuldmagt inkl. tinglysning</label>
+            </value>
+            <value>
+                <fullName>(Sygdom) Fremtidsfuldmagt for virksomhedsejere inkl. tinglysning</fullName>
+                <default>false</default>
+                <label>(Sygdom) Fremtidsfuldmagt for virksomhedsejere inkl. tinglysning</label>
+            </value>
+            <value>
+                <fullName>(Sygdom) Fuldmagtstjek</fullName>
+                <default>false</default>
+                <label>(Sygdom) Fuldmagtstjek</label>
+            </value>
+            <value>
+                <fullName>(Bortgang) Singletestamente</fullName>
+                <default>false</default>
+                <label>(Bortgang) Singletestamente</label>
+            </value>
+            <value>
+                <fullName>(Bortgang) Fællestestamente</fullName>
+                <default>false</default>
+                <label>(Bortgang) Fællestestamente</label>
+            </value>
+            <value>
+                <fullName>(Bortgang) Børnetestamente</fullName>
+                <default>false</default>
+                <label>(Bortgang) Børnetestamente</label>
+            </value>
+            <value>
+                <fullName>(Bortgang) Indbotestamente</fullName>
+                <default>false</default>
+                <label>(Bortgang) Indbotestamente</label>
+            </value>
+            <value>
+                <fullName>(Bortgang) Samtykke til uskiftet bo</fullName>
+                <default>false</default>
+                <label>(Bortgang) Samtykke til uskiftet bo</label>
+            </value>
+            <value>
+                <fullName>(Bortgang) Min sidste vilje</fullName>
+                <default>false</default>
+                <label>(Bortgang) Min sidste vilje</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>8</visibleLines>
+</CustomField>

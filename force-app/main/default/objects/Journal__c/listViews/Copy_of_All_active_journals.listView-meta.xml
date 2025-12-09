@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Copy_of_All_active_journals</fullName>
+    <columns>Account__c</columns>
+    <columns>Responsible_Lawyer__c</columns>
+    <columns>NAME</columns>
+    <columns>Journal_States__c</columns>
+    <columns>Awaiting_agent_since__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>Latest_Note_on_Account__c</columns>
+    <columns>journal_Deadline__c</columns>
+    <columns>OWNER.FIRST_NAME</columns>
+    <columns>Original_Lawyer__c</columns>
+    <columns>GA_Most_Recent_Comment_Date__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Account__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <filters>
+        <field>Journal_States__c</field>
+        <operation>equals</operation>
+        <value>Gennemgang Get Accept,Hastesager (1-3 dage),draft,Mangelfuld tjekliste,client_review</value>
+    </filters>
+    <filters>
+        <field>Market_Unit__c</field>
+        <operation>equals</operation>
+        <value>DFJ_DK</value>
+    </filters>
+    <filters>
+        <field>GA_Reply_Status__c</field>
+        <operation>equals</operation>
+        <value>Awaiting agent</value>
+    </filters>
+    <label>Fordeling af GA</label>
+</ListView>

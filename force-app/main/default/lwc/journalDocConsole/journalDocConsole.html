@@ -1,0 +1,337 @@
+<template>
+  <lightning-card title="Journal Documents" icon-name="utility:upload">
+    <!-- actions in card header -->
+    <lightning-button
+      slot="actions"
+      label="Log in as..."
+      variant="brand"
+      title="Create client impersonation link and open portal"
+      onclick={onImpersonate}
+      class="slds-m-right_small">
+    </lightning-button>
+    
+    <lightning-button-icon
+      slot="actions"
+      icon-name="utility:refresh"
+      variant="border-filled"
+      alternative-text="Refresh"
+      title="Refresh list"
+      onclick={onRefresh}>
+    </lightning-button-icon>
+
+    <div class="slds-p-around_medium">
+      <!-- Busy overlay + spinner -->
+      <template if:true={busy}>
+        <div class="busy-overlay slds-backdrop slds-backdrop_open"></div>
+        <lightning-spinner alternative-text="Processing" size="medium" variant="brand"></lightning-spinner>
+      </template>
+      <!-- =========================================================
+           Compact HEADER with controls
+           =======================================================-->
+      <div class="slds-box slds-theme_shade slds-m-bottom_medium header-box">
+        <!-- line 1 : title -->
+        <div class="slds-text-heading_medium slds-m-bottom_x-small">
+          Upload &amp; Send
+        </div>
+
+        <!-- line 2 : file-picker + create-draft -->
+        <div class="slds-grid slds-align_absolute-center">
+          <lightning-input
+            class="header-control"
+            type="file"
+            multiple
+            accept=".pdf,application/pdf"
+            variant="label-hidden"
+            label="Upload Files"
+            onchange={onPick}
+            disabled={busy}>
+          </lightning-input>
+
+          <lightning-button
+            class="header-control"
+            variant="brand"
+            label="Create Draft"
+            title="Upload to S3 and create Draft records"
+            onclick={startUpload}
+            disabled={createDisabled}>
+          </lightning-button>
+        </div>
+      </div>
+      <!-- /header ------------------------------------------------->
+
+      <template if:true={ready}>
+        <!-- ---------- Selected files list ----------------------- -->
+        <template if:true={rows.length}>
+          <div class="slds-text-title_caps">Selected Files</div>
+          <ul class="slds-m-top_x-small">
+            <template for:each={rows} for:item="r">
+              <li key={r.id}>{r.name} — {r.status}</li>
+            </template>
+          </ul>
+        </template>
+
+        <!-- ---------- Tabs: Newest / Older ---------------------- -->
+        <template if:true={hasAnyDocs}>
+          <div class="slds-m-top_large">
+            <lightning-tabset variant="scoped"
+                              active-tab-value={activeTab}
+                              onactive={onTabActive}>
+              <!-- === NEWEST TAB ================================= -->
+              <lightning-tab label={newestTabLabel} value="newest">
+                <div class="slds-text-align_right slds-m-bottom_x-small">
+                  Latest Sendout: {latestSendoutLabel}
+                </div>
+
+                <template if:true={newestDocs.length}>
+                  <lightning-layout multiple-rows class="slds-m-top_small">
+                    <template for:each={newestDocs} for:item="d">
+                      <lightning-layout-item key={d.id} size="12" padding="around-small">
+                        <!-- Enable drop on each row-box in NEWEST tab -->
+                        <div class={d.rowBoxClass}
+                             data-id={d.id}
+                             ondragover={onDragOver}
+                             ondragleave={onDragLeave}
+                             ondrop={onDrop}>
+                          <!-- top-right info bubble -->
+                          <template if:true={d.hasActivity}>
+                            <div class="info-badge" title="Timeline">
+                              <lightning-button-icon
+                                icon-name="utility:info"
+                                alternative-text="Timeline"
+                                variant="bare"
+                                size="small">
+                              </lightning-button-icon>
+                              <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-right tip">
+                                <div class="slds-popover__body">
+                                  <ul class="tip-list">
+                                    <template if:true={d.sentFmt}><li>Sent: {d.sentFmt}</li></template>
+                                    <template if:true={d.firstFmt}><li>First Viewed: {d.firstFmt}</li></template>
+                                    <template if:true={d.lastFmt}><li>Last Viewed: {d.lastFmt}</li></template>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </template>
+
+                          <!-- row 1 : drag handle + name + "Saved" -->
+                          <div class="name-row">
+                            <!-- drag handle (NEW) – drag only starts from this handle -->
+                            <span class="drag-handle"
+                                  title="Drag to reorder"
+                                  draggable="true"
+                                  data-id={d.id}
+                                  ondragstart={onDragStart}
+                                  ondragend={onDragEnd}>
+                              <lightning-icon icon-name="utility:rows"
+                                              size="x-small"
+                                              alternative-text="Reorder"></lightning-icon>
+                            </span>
+
+                            <div class="doc-name slds-truncate" title={d.name}>{d.name}</div>
+                            <template if:true={d.flashSaved}>
+                              <span class="type-saved" title="Saved">
+                                <lightning-icon icon-name="utility:success" size="xx-small" alternative-text="Saved" class="type-saved-icon"></lightning-icon>
+                                <span class="type-saved-text">Saved</span>
+                              </span>
+                            </template>
+                          </div>
+
+                          <!-- row 2 : Document Type picker (full width, closer to name) -->
+                          <div class="type-row">
+                            <lightning-combobox
+                              class="type-combobox"
+                              data-id={d.id}
+                              name="docType"
+                              value={d.docType}
+                              placeholder="Choose document type"
+                              options={d.docTypeOptions}
+                              onchange={onDocTypeChange}
+                              disabled={d.docTypeOptionsDisabled}>
+                            </lightning-combobox>
+                          </div>
+
+                          <!-- row 3 : block approval checkbox (if not Approved) -->
+                          <template if:true={d.showBlockApprovalCheckbox}>
+                            <div class="slds-m-top_x-small slds-m-bottom_x-small">
+                              <lightning-input
+                                type="checkbox"
+                                label="Block Approval"
+                                checked={d.isApprovalBlocked}
+                                data-id={d.id}
+                                onchange={onBlockApprovalChange}
+                                disabled={busy}>
+                              </lightning-input>
+                            </div>
+                          </template>
+
+                          <!-- row 4 : meta + actions (pulled up via tighter spacing above) -->
+                          <div class="slds-grid slds-grid_align-spread slds-align-middle" style="width:100%;">
+                            <!-- left group : pills -->
+                            <div class="pill-row">
+                              <span class="slds-badge">v{d.version}</span>
+                              <span class={d.statusBadgeClass}>{d.status}</span>
+                            </div>
+
+                            <!-- right group : buttons -->
+                            <div class="right-actions">
+                              <lightning-button
+                                size="small"
+                                variant="neutral"
+                                label="Sign"
+                                title="Request digital signature"
+                                icon-name="utility:edit"
+                                data-id={d.id}
+                                onclick={onRequestSignature}
+                                disabled={busy}>
+                              </lightning-button>
+                              <lightning-button
+                                class="slds-m-left_x-small"
+                                size="small"
+                                variant="brand-outline"
+                                label="Replace"
+                                title="Upload a new file as the next version"
+                                data-id={d.id}
+                                onclick={onReplace}
+                                disabled={busy}>
+                              </lightning-button>
+                              <lightning-button
+                                class="slds-m-left_x-small"
+                                size="small"
+                                variant="destructive"
+                                label="Delete"
+                                title="Delete this Shared Document"
+                                data-id={d.id}
+                                onclick={onDelete}
+                                disabled={busy}>
+                              </lightning-button>
+                            </div>
+                          </div>
+                        </div>
+                      </lightning-layout-item>
+                    </template>
+                  </lightning-layout>
+                </template>
+              </lightning-tab>
+
+              <!-- === OLDER TAB ================================= -->
+              <lightning-tab label={olderTabLabel} value="older">
+                <template if:true={olderDocs.length}>
+                  <lightning-layout multiple-rows class="slds-m-top_small">
+                    <template for:each={olderDocs} for:item="d">
+                      <lightning-layout-item key={d.id} size="12" padding="around-small">
+                        <div class={d.rowBoxClass}>
+                          <!-- top-right info bubble -->
+                          <template if:true={d.hasActivity}>
+                            <div class="info-badge" title="Timeline">
+                              <lightning-button-icon
+                                icon-name="utility:info"
+                                alternative-text="Timeline"
+                                variant="bare"
+                                size="small">
+                              </lightning-button-icon>
+                              <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-right tip">
+                                <div class="slds-popover__body">
+                                  <ul class="tip-list">
+                                    <template if:true={d.sentFmt}><li>Sent: {d.sentFmt}</li></template>
+                                    <template if:true={d.firstFmt}><li>First Viewed: {d.firstFmt}</li></template>
+                                    <template if:true={d.lastFmt}><li>Last Viewed: {d.lastFmt}</li></template>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </template>
+
+                          <!-- row 1 : name + "Saved" -->
+                          <div class="name-row">
+                            <div class="doc-name slds-truncate" title={d.name}>{d.name}</div>
+                            <template if:true={d.flashSaved}>
+                              <span class="type-saved" title="Saved">
+                                <lightning-icon icon-name="utility:success" size="xx-small" alternative-text="Saved" class="type-saved-icon"></lightning-icon>
+                                <span class="type-saved-text">Saved</span>
+                              </span>
+                            </template>
+                          </div>
+
+                          <!-- row 2 : Document Type picker -->
+                          <div class="type-row">
+                            <lightning-combobox
+                              class="type-combobox"
+                              data-id={d.id}
+                              name="docType"
+                              value={d.docType}
+                              placeholder="Choose document type"
+                              options={d.docTypeOptions}
+                              onchange={onDocTypeChange}
+                              disabled={d.docTypeOptionsDisabled}>
+                            </lightning-combobox>
+                          </div>
+
+                          <!-- row 3 : block approval checkbox (if not Approved) -->
+                          <template if:true={d.showBlockApprovalCheckbox}>
+                            <div class="slds-m-top_x-small slds-m-bottom_x-small">
+                              <lightning-input
+                                type="checkbox"
+                                label="Block Approval"
+                                checked={d.isApprovalBlocked}
+                                data-id={d.id}
+                                onchange={onBlockApprovalChange}
+                                disabled={busy}>
+                              </lightning-input>
+                            </div>
+                          </template>
+
+                          <!-- row 4 : meta + actions -->
+                          <div class="slds-grid slds-grid_align-spread slds-align-middle" style="width:100%;">
+                            <div class="pill-row">
+                              <span class="slds-badge">v{d.version}</span>
+                              <span class={d.statusBadgeClass}>{d.status}</span>
+                            </div>
+                            <div class="right-actions">
+                              <lightning-button
+                                size="small"
+                                variant="destructive"
+                                label="Delete"
+                                title="Delete this Shared Document"
+                                data-id={d.id}
+                                onclick={onDelete}
+                                disabled={busy}>
+                              </lightning-button>
+                            </div>
+                          </div>
+                        </div>
+                      </lightning-layout-item>
+                    </template>
+                  </lightning-layout>
+                </template>
+              </lightning-tab>
+            </lightning-tabset>
+          </div>
+        </template>
+
+        <!-- Replace-file hidden input -->
+        <input type="file" data-replace="true" accept=".pdf,application/pdf" onchange={onReplaceFilePicked} hidden>
+      </template>
+
+      <!-- messages -->
+      <template if:true={messageSuccess}>
+        <div class="slds-m-top_medium slds-text-color_success">{messageSuccess}</div>
+      </template>
+      <template if:true={messageError}>
+        <div class="slds-m-top_medium slds-text-color_error">{messageError}</div>
+      </template>
+
+      <!-- Drag ghost outlet (so scoped CSS applies to the ghost) -->
+      <div class="drag-ghost-host" lwc:dom="manual"></div>
+    </div>
+  </lightning-card>
+
+  <!-- Signature Request Modal -->
+  <c-signature-request-modal
+    document-id={signatureModalDocId}
+    document-name={signatureModalDocName}
+    journal-id={recordId}
+    account-id={accountId}
+    market-unit={journalMarketUnit}
+    onsignaturecreated={handleSignatureCreated}>
+  </c-signature-request-modal>
+</template>

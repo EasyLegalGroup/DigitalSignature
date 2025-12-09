@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Alle_sager_f_rdig_Sverige</fullName>
+    <columns>NAME</columns>
+    <columns>Account__c</columns>
+    <columns>Order__c</columns>
+    <columns>Civil_Status__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>CREATEDBY_USER</columns>
+    <columns>Journal_States__c</columns>
+    <columns>journal_Deadline__c</columns>
+    <columns>Market_Unit__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Journal_States__c</field>
+        <operation>equals</operation>
+        <value>Færdig ny process</value>
+    </filters>
+    <filters>
+        <field>Market_Unit__c</field>
+        <operation>equals</operation>
+        <value>FA_SE,Testamente_SV</value>
+    </filters>
+    <label>Alle sager færdig - Sverige</label>
+</ListView>

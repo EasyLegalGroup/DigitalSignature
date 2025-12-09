@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Jalice_Journals_Deadline_overdue</fullName>
+    <columns>NAME</columns>
+    <columns>Account__c</columns>
+    <columns>Order__c</columns>
+    <columns>Lead__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>CREATEDBY_USER.ALIAS</columns>
+    <columns>journal_Deadline__c</columns>
+    <columns>OWNER.FIRST_NAME</columns>
+    <columns>Journal_States__c</columns>
+    <columns>Civil_Status__c</columns>
+    <columns>LAST_ACTIVITY</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Journal_States__c</field>
+        <operation>equals</operation>
+        <value>new,Misset aftale,Afventer information - Dokumenter ikke sendt,draft,Afventer Accept_dokumenter_afsendt,client_review,public_registration,Ikke afsendt,Misc opfølgning,Færdig - Afventer respons</value>
+    </filters>
+    <filters>
+        <field>Account__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <filters>
+        <field>journal_Deadline__c</field>
+        <operation>lessThan</operation>
+        <value>TODAY</value>
+    </filters>
+    <filters>
+        <field>OWNER.FIRST_NAME</field>
+        <operation>equals</operation>
+        <value>Jalice</value>
+    </filters>
+    <label>Jalice Journals Deadline overdue</label>
+</ListView>

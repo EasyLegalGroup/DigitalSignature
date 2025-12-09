@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Link_til_retskreds__c</fullName>
+    <externalId>false</externalId>
+    <formula>CASE(
+    Retskreds__c,
+    &quot;Københavns Byret&quot;, &quot;https://domstol.dk/koebenhavn/notar/&quot;,
+    &quot;Retten på Bornholm&quot;, &quot;http://domstol.born.book.booksys.dk/&quot;,
+    &quot;Retten i Esbjerg&quot;, &quot;http://domstol.esbj.book.booksys.dk/&quot;,
+    &quot;Retten på Frederiksberg&quot;, &quot;http://domstol.frbg.book.booksys.dk/&quot;,
+    &quot;Retten i Glostrup&quot;, &quot;http://domstol.glos.book.booksys.dk/&quot;,
+    &quot;Retten i Helsingør&quot;, &quot;http://domstol.hels.book.booksys.dk/&quot;,
+    &quot;Retten i Herning&quot;, &quot;http://domstol.hern.book.booksys.dk/&quot;,
+    &quot;Retten i Hillerød&quot;, &quot;http://domstol.hill.book.booksys.dk/&quot;,
+    &quot;Retten i Hjørring&quot;, &quot;http://domstol.hjo1.book.booksys.dk/&quot;,
+    &quot;Retten i Holbæk&quot;, &quot;http://domstol.holb.book.booksys.dk/&quot;,
+    &quot;Retten i Holstebro&quot;, &quot;http://domstol.hols.book.booksys.dk/&quot;,
+    &quot;Retten i Horsens&quot;, &quot;http://domstol.hors.book.booksys.dk/&quot;,
+    &quot;Retten i Kolding&quot;, &quot;https://www.domstol.dk/kolding/notarbooking/&quot;,
+    &quot;Retten i Lyngby&quot;, &quot;https://domstol.dk/lyngby/notar/&quot;,
+    &quot;Retten i Nykøbing F&quot;, &quot;http://domstol.nykf.book.booksys.dk/&quot;,
+    &quot;Retten i Næstved (hovedkontor)&quot;, &quot;http://domstol.nast.book.booksys.dk/&quot;,
+    &quot;Retten i Næstved (bitingsted)&quot;, &quot;http://domstol.slag.book.booksys.dk/&quot;,
+    &quot;Retten i Odense&quot;, &quot;http://domstol.oden.book.booksys.dk/&quot;,
+    &quot;Retten i Randers&quot;, &quot;http://domstol.rand.book.booksys.dk/&quot;,
+    &quot;Retten i Roskilde&quot;, &quot;https://domstol.dk/roskilde/notarforretninger/&quot;,
+    &quot;Retten i Svendborg&quot;, &quot;http://domstol.sven.book.booksys.dk/&quot;,
+    &quot;Retten i Sønderborg&quot;, &quot;http://domstol.sond.book.booksys.dk/&quot;,
+    &quot;Retten i Viborg&quot;, &quot;http://domstol.vibo.book.booksys.dk/&quot;,
+    &quot;Retten i Aalborg&quot;, &quot;http://domstol.aalb.book.booksys.dk/&quot;,
+    &quot;Retten i Aarhus&quot;, &quot;http://domstol.aarh.book.booksys.dk/&quot;,
+    &quot;https://domstol.dk/selvbetjening/notarbooking/&quot;
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Link til retskreds</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

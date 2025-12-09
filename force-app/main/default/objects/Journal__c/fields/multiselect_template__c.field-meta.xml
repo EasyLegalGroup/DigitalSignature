@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>multiselect_template__c</fullName>
+    <label>Multiselect template</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Testamente</fullName>
+                <default>false</default>
+                <label>Testamente</label>
+            </value>
+            <value>
+                <fullName>Fremtidsfuldmagt</fullName>
+                <default>false</default>
+                <label>Fremtidsfuldmagt</label>
+            </value>
+            <value>
+                <fullName>Børnetestamente</fullName>
+                <default>false</default>
+                <label>Børnetestamente</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

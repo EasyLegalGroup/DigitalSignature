@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Search_Google_Drive_for_Journal_Number__c</fullName>
+    <inlineHelpText>This field just searches Google Drive for the Journal Number. There being a link here, does not necessarily mean, that there is anything to find.</inlineHelpText>
+    <label>Search Google Drive for Journal Number</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Url</type>
+</CustomField>

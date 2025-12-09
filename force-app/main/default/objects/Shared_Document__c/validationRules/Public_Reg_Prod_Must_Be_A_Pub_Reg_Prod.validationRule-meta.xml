@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Public_Reg_Prod_Must_Be_A_Pub_Reg_Prod</fullName>
+    <active>false</active>
+    <description>If Public_Registration_Product__c is populated, the selected record must have Is_Public_Registration_Product__c = TRUE.</description>
+    <errorConditionFormula>AND(
+NOT(ISBLANK(Public_Registration_Product__c)),
+NOT(Public_Registration_Product__r.Is_Public_Registration_Product__c)
+)</errorConditionFormula>
+    <errorDisplayField>Public_Registration_Product__c</errorDisplayField>
+    <errorMessage>Selected product isn’t marked as a Public Registration Product. Choose a product where “Is Public Registration Product” is true.</errorMessage>
+</ValidationRule>

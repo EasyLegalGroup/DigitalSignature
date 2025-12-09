@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Ny_kommende_sager</fullName>
+    <columns>NAME</columns>
+    <columns>Account__c</columns>
+    <columns>OWNER.FIRST_NAME</columns>
+    <columns>journal_Deadline__c</columns>
+    <columns>Civil_Status__c</columns>
+    <columns>Children_type__c</columns>
+    <columns>CREATEDBY_USER</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>Journal_States__c</columns>
+    <columns>LAST_UPDATE</columns>
+    <columns>Responsible_Lawyer__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Journal_States__c</field>
+        <operation>equals</operation>
+        <value>new</value>
+    </filters>
+    <filters>
+        <field>Account__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <filters>
+        <field>Market_Unit__c</field>
+        <operation>equals</operation>
+        <value>DFJ_DK,Testamente_DK</value>
+    </filters>
+    <label>Nye kommende sager</label>
+</ListView>
