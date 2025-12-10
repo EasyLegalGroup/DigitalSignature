@@ -1114,6 +1114,32 @@ def handle_doc_url(event, event_json):
         return resp(event, 500, {"error": "S3 presign failed"})
     return resp(event, 200, {"ok": True, "url": url})
 
+# ===================== INTERNAL API (server-to-server) =====================
+
+def handle_internal_doc_content(event, event_json):
+    """
+    Internal endpoint for Apex to get a presigned S3 URL for a document.
+    POST /internal/doc-content
+    Body: {"s3Key": "dk/customer-documents/J-0058318/J-0058318.pdf"}
+    Returns: {"ok": true, "url": "https://...presigned-url..."}
+    """
+    data = event_json or {}
+    s3_key = (data.get("s3Key") or "").strip()
+    
+    if not s3_key:
+        return resp(event, 400, {"error": "Missing s3Key"})
+    
+    # Basic validation - key should look reasonable
+    if ".." in s3_key or s3_key.startswith("/"):
+        return resp(event, 400, {"error": "Invalid s3Key"})
+    
+    try:
+        url = s3_presign_get(DOCS_BUCKET, s3_key, expires=SESSION_TTL_SECONDS)
+        return resp(event, 200, {"ok": True, "url": url})
+    except Exception as e:
+        log("internal_doc_content s3_presign_get error:", repr(e))
+        return resp(event, 500, {"error": "S3 presign failed"})
+
 # ===================== UPLOAD-START (journal) =====================
 _SAFE_CHARS = re.compile(r'[^A-Za-z0-9._-]')
 
@@ -2223,6 +2249,9 @@ def lambda_handler(event, context):
         # Chat (journal legacy)
         if path.endswith("/chat/send")                  and method == "POST": return handle_chat_send(event, data)
         if path.endswith("/chat/list")                  and method == "GET":  return handle_chat_list(event)
+
+        # Internal API (for Apex/server-to-server calls)
+        if path.endswith("/internal/doc-content")       and method == "POST": return handle_internal_doc_content(event, data)
 
         return resp(event, 404, {"error": "Not Found"})
 

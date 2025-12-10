@@ -13,10 +13,22 @@ public with sharing class SignatureRequestService {
     public static CreateSignatureResult createSignatureRequest(CreateSignatureInput input) {
         CreateSignatureResult result = new CreateSignatureResult();
         
+        // Debug logging to trace what's received
+        System.debug('=== createSignatureRequest called ===');
+        System.debug('Input is null: ' + (input == null));
+        if (input != null) {
+            System.debug('input.sharedDocumentId: ' + input.sharedDocumentId);
+            System.debug('input.accountId: ' + input.accountId);
+            System.debug('input.journalId: ' + input.journalId);
+            System.debug('input.signerName: ' + input.signerName);
+            System.debug('input.signerEmail: ' + input.signerEmail);
+        }
+        
         try {
             // Validate input
             String validationError = validateInput(input);
             if (String.isNotBlank(validationError)) {
+                System.debug('Validation error: ' + validationError);
                 result.success = false;
                 result.errorMessage = validationError;
                 return result;
@@ -38,21 +50,7 @@ public with sharing class SignatureRequestService {
                 LIMIT 1
             ];
             
-            // Create the Signature_Request__c record first (in Pending state)
-            Signature_Request__c sr = new Signature_Request__c();
-            sr.Status__c = 'Pending';
-            sr.Account__c = input.accountId;
-            sr.Journal__c = input.journalId;
-            sr.Shared_Document__c = input.sharedDocumentId;
-            sr.Signer_Name__c = input.signerName;
-            sr.Signer_Email__c = input.signerEmail;
-            sr.Market_Unit__c = input.marketUnit;
-            sr.Expiration_Date__c = Date.today().addDays(input.expirationDays != null ? input.expirationDays : 14);
-            insert sr;
-            
-            result.signatureRequestId = sr.Id;
-            
-            // Build the API request
+            // Build the API request FIRST (before any DML)
             PenneoApiService.CreateCaseFileRequest apiRequest = new PenneoApiService.CreateCaseFileRequest();
             apiRequest.title = String.isNotBlank(input.title) ? input.title : doc.Name;
             apiRequest.signerName = input.signerName;
@@ -63,31 +61,44 @@ public with sharing class SignatureRequestService {
             apiRequest.language = String.isNotBlank(input.language) ? input.language : 'da';
             apiRequest.expirationDays = input.expirationDays != null ? input.expirationDays : 14;
             
-            // Call Penneo API to create case file
+            // Call Penneo API BEFORE any DML to avoid "uncommitted work" error
             String environment = String.isNotBlank(input.environment) ? input.environment : 'sandbox';
             PenneoApiService.CreateCaseFileResponse apiResponse = PenneoApiService.createCaseFile(apiRequest, environment);
             
+            // NOW create the Signature_Request__c record with the results
+            Signature_Request__c sr = new Signature_Request__c();
+            sr.Account__c = input.accountId;
+            sr.Journal__c = input.journalId;
+            sr.Shared_Document__c = input.sharedDocumentId;
+            sr.Signer_Name__c = input.signerName;
+            sr.Signer_Email__c = input.signerEmail;
+            sr.Market_Unit__c = input.marketUnit;
+            sr.Expiration_Date__c = Date.today().addDays(input.expirationDays != null ? input.expirationDays : 14);
+            
             if (!apiResponse.success) {
-                // Update record with error
+                // Insert record with error status
                 sr.Status__c = 'Failed';
                 sr.Error_Message__c = apiResponse.errorMessage;
-                update sr;
+                insert sr;
                 
                 result.success = false;
                 result.errorMessage = apiResponse.errorMessage;
+                result.signatureRequestId = sr.Id;
                 return result;
             }
             
-            // Update with job info
+            // Insert with success status and job info
+            sr.Status__c = 'Pending';
             sr.Signature_UUID__c = apiResponse.jobUuid;
             sr.Payload_Hash__c = apiResponse.payloadHash;
-            update sr;
+            insert sr;
+            
+            result.signatureRequestId = sr.Id;
             
             // Queue job status polling
             System.enqueueJob(new PollJobStatusJob(sr.Id, apiResponse.jobUuid, apiResponse.payloadHash, environment));
             
             result.success = true;
-            result.signatureRequestId = sr.Id;
             result.message = 'Signature request created successfully. Processing...';
             
         } catch (Exception e) {
@@ -274,18 +285,62 @@ public with sharing class SignatureRequestService {
     }
     
     /**
-     * Download document from S3
-     * Placeholder - implement based on your S3 configuration
+     * Download document from S3 via Lambda presigned URL
      */
     private static Blob downloadFromS3(String s3Key) {
-        // TODO: Implement S3 download
-        // Option 1: Use AWS SDK via Named Credentials
-        // Option 2: Generate presigned URL and fetch
-        // Option 3: Use existing DocShareService methods
+        // Lambda API Gateway endpoint (test environment)
+        String lambdaEndpoint = 'https://21tpssexjd.execute-api.eu-north-1.amazonaws.com/internal/doc-content';
         
-        // For now, return null - will need to integrate with existing S3 logic
-        System.debug('S3 download not yet implemented for key: ' + s3Key);
-        return null;
+        try {
+            // Step 1: Get presigned URL from Lambda
+            HttpRequest presignReq = new HttpRequest();
+            presignReq.setEndpoint(lambdaEndpoint);
+            presignReq.setMethod('POST');
+            presignReq.setHeader('Content-Type', 'application/json');
+            presignReq.setBody(JSON.serialize(new Map<String, String>{ 's3Key' => s3Key }));
+            presignReq.setTimeout(30000);
+            
+            Http http = new Http();
+            HttpResponse presignResp = http.send(presignReq);
+            
+            System.debug('Lambda presign response status: ' + presignResp.getStatusCode());
+            System.debug('Lambda presign response body: ' + presignResp.getBody());
+            
+            if (presignResp.getStatusCode() != 200) {
+                System.debug('Failed to get presigned URL from Lambda: ' + presignResp.getBody());
+                return null;
+            }
+            
+            Map<String, Object> presignResult = (Map<String, Object>) JSON.deserializeUntyped(presignResp.getBody());
+            String presignedUrl = (String) presignResult.get('url');
+            
+            if (String.isBlank(presignedUrl)) {
+                System.debug('No presigned URL returned from Lambda');
+                return null;
+            }
+            
+            // Step 2: Download the actual document from S3 using presigned URL
+            HttpRequest s3Req = new HttpRequest();
+            s3Req.setEndpoint(presignedUrl);
+            s3Req.setMethod('GET');
+            s3Req.setTimeout(60000); // 60 second timeout for large files
+            
+            HttpResponse s3Resp = http.send(s3Req);
+            
+            System.debug('S3 download response status: ' + s3Resp.getStatusCode());
+            System.debug('S3 download content length: ' + s3Resp.getBodyAsBlob()?.size());
+            
+            if (s3Resp.getStatusCode() != 200) {
+                System.debug('Failed to download from S3: ' + s3Resp.getStatus());
+                return null;
+            }
+            
+            return s3Resp.getBodyAsBlob();
+            
+        } catch (Exception e) {
+            System.debug('Error downloading from S3: ' + e.getMessage() + ' - ' + e.getStackTraceString());
+            return null;
+        }
     }
     
     // ===== Input/Output Classes =====

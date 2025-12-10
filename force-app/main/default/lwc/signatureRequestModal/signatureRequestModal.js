@@ -16,11 +16,16 @@ import LAST_NAME from '@salesforce/schema/Account.LastName';
 const ACCOUNT_FIELDS = [PERSON_EMAIL, FIRST_NAME, LAST_NAME];
 
 export default class SignatureRequestModal extends LightningElement {
-    @api documentId;        // Shared_Document__c Id
-    @api documentName;      // Document name for display
+    @api documentId;        // Shared_Document__c Id (from parent binding)
+    @api documentName;      // Document name for display (from parent binding)
     @api journalId;         // Journal__c Id
     @api accountId;         // Account Id
     @api marketUnit;        // Market unit for the journal
+
+    // Internal tracked properties for the actual values used
+    // (needed because @api props can't be reliably set from within the component)
+    @track _docId;
+    @track _docName;
 
     @track isOpen = false;
     @track isLoading = false;
@@ -74,7 +79,18 @@ export default class SignatureRequestModal extends LightningElement {
     }
 
     get modalTitle() {
-        return `Request Signature: ${this.documentName || 'Document'}`;
+        const name = this._docName || this.documentName || 'Document';
+        return `Request Signature: ${name}`;
+    }
+
+    // Getter for effective document ID (internal takes precedence)
+    get effectiveDocId() {
+        return this._docId || this.documentId;
+    }
+
+    // Getter for effective document name
+    get effectiveDocName() {
+        return this._docName || this.documentName;
     }
 
     get canCreateNew() {
@@ -89,16 +105,15 @@ export default class SignatureRequestModal extends LightningElement {
     }
 
     // Public method to open the modal
-    // Can optionally pass docId and docName directly to avoid timing issues with @api properties
+    // Pass docId and docName directly to ensure they're captured
     @api
     open(docId, docName) {
-        // If values are passed directly, use them (otherwise fall back to @api properties)
-        if (docId) {
-            this.documentId = docId;
-        }
-        if (docName) {
-            this.documentName = docName;
-        }
+        // Store in internal tracked properties (not @api properties which can't be reliably set internally)
+        this._docId = docId || this.documentId;
+        this._docName = docName || this.documentName;
+        
+        console.log('SignatureRequestModal.open called with docId:', this._docId, 'docName:', this._docName);
+        
         this.isOpen = true;
         this.showNewRequestForm = false;
         this.loadExistingRequests();
@@ -109,15 +124,22 @@ export default class SignatureRequestModal extends LightningElement {
     close() {
         this.isOpen = false;
         this.showNewRequestForm = false;
+        // Clear internal state
+        this._docId = null;
+        this._docName = null;
     }
 
     async loadExistingRequests() {
-        if (!this.documentId) return;
+        const docId = this.effectiveDocId;
+        if (!docId) {
+            console.warn('loadExistingRequests: No document ID available');
+            return;
+        }
 
         this.isLoading = true;
         try {
             this.existingRequests = await getSignatureRequestsForDocument({ 
-                sharedDocumentId: this.documentId 
+                sharedDocumentId: docId 
             });
         } catch (error) {
             console.error('Error loading signature requests:', error);
@@ -134,7 +156,7 @@ export default class SignatureRequestModal extends LightningElement {
     handleShowNewForm() {
         this.showNewRequestForm = true;
         // Pre-fill title with document name
-        this.title = this.documentName || '';
+        this.title = this.effectiveDocName || '';
     }
 
     handleCancelNewForm() {
@@ -159,20 +181,32 @@ export default class SignatureRequestModal extends LightningElement {
     async handleCreateRequest() {
         if (!this.validateForm()) return;
 
+        const docId = this.effectiveDocId;
+        const docName = this.effectiveDocName;
+
+        console.log('handleCreateRequest: docId =', docId, ', docName =', docName);
+
+        if (!docId) {
+            this.showToast('Error', 'Document ID is missing', 'error');
+            return;
+        }
+
         this.isLoading = true;
         try {
             const input = {
                 accountId: this.accountId,
                 journalId: this.journalId,
-                sharedDocumentId: this.documentId,
+                sharedDocumentId: docId,
                 signerName: this.signerName,
                 signerEmail: this.signerEmail,
-                title: this.title || this.documentName,
+                title: this.title || docName,
                 language: this.language,
                 expirationDays: this.expirationDays,
                 marketUnit: this.marketUnit,
                 environment: 'sandbox' // TODO: Make configurable
             };
+
+            console.log('Creating signature request with input:', JSON.stringify(input));
 
             const result = await createSignatureRequest({ input });
 
