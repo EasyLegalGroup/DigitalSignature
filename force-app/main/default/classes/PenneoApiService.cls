@@ -102,16 +102,10 @@ public with sharing class PenneoApiService {
             return resp;
         }
         
-        // Get settings and token
+        // Get settings
         PenneoAuthService.ProviderSettings settings = PenneoAuthService.getSettings(environment);
         if (settings == null) {
             resp.errorMessage = 'No active signature provider settings found';
-            return resp;
-        }
-        
-        String accessToken = PenneoAuthService.getAccessToken(environment);
-        if (String.isBlank(accessToken)) {
-            resp.errorMessage = 'Failed to obtain access token';
             return resp;
         }
         
@@ -130,8 +124,12 @@ public with sharing class PenneoApiService {
             HttpRequest req = new HttpRequest();
             req.setEndpoint(endpoint);
             req.setMethod('POST');
-            req.setHeader('Authorization', 'Bearer ' + accessToken);
             req.setHeader('Content-Type', 'multipart/form-data; boundary=' + boundary);
+            req.setHeader('Accept', 'application/json');
+            
+            // Apply authentication (WSSE or OAuth)
+            applyAuthentication(req, environment);
+            
             req.setBodyAsBlob(requestBody);
             req.setTimeout(60000);
             
@@ -178,12 +176,6 @@ public with sharing class PenneoApiService {
             return resp;
         }
         
-        String accessToken = PenneoAuthService.getAccessToken(environment);
-        if (String.isBlank(accessToken)) {
-            resp.errorMessage = 'Failed to obtain access token';
-            return resp;
-        }
-        
         try {
             String endpoint = settings.sendApiBaseUrl + '/queue/public/status';
             String body = JSON.serialize(new Map<String, String>{
@@ -194,8 +186,10 @@ public with sharing class PenneoApiService {
             HttpRequest req = new HttpRequest();
             req.setEndpoint(endpoint);
             req.setMethod('POST');
-            req.setHeader('Authorization', 'Bearer ' + accessToken);
             req.setHeader('Content-Type', 'application/json');
+            req.setHeader('Accept', 'application/json');
+            // Note: Job status endpoint doesn't require auth per Penneo docs
+            // The UUID + payloadHash provide security
             req.setBody(body);
             req.setTimeout(30000);
             
@@ -277,19 +271,17 @@ public with sharing class PenneoApiService {
             return resp;
         }
         
-        String accessToken = PenneoAuthService.getAccessToken(environment);
-        if (String.isBlank(accessToken)) {
-            resp.errorMessage = 'Failed to obtain access token';
-            return resp;
-        }
-        
         try {
             String endpoint = settings.apiBaseUrl + '/casefiles/' + caseFileId;
             
             HttpRequest req = new HttpRequest();
             req.setEndpoint(endpoint);
             req.setMethod('GET');
-            req.setHeader('Authorization', 'Bearer ' + accessToken);
+            req.setHeader('Accept', 'application/json');
+            
+            // Apply authentication (WSSE or OAuth)
+            applyAuthentication(req, environment);
+            
             req.setTimeout(30000);
             
             Http http = new Http();
@@ -336,21 +328,18 @@ public with sharing class PenneoApiService {
             return resp;
         }
         
-        String accessToken = PenneoAuthService.getAccessToken(environment);
-        if (String.isBlank(accessToken)) {
-            resp.errorMessage = 'Failed to obtain access token';
-            return resp;
-        }
-        
         try {
-            // First, get the document details to find the PDF URL
+            // Get the signed PDF
             String endpoint = settings.apiBaseUrl + '/documents/' + documentId + '/pdf';
             
             HttpRequest req = new HttpRequest();
             req.setEndpoint(endpoint);
             req.setMethod('GET');
-            req.setHeader('Authorization', 'Bearer ' + accessToken);
             req.setHeader('Accept', 'application/pdf');
+            
+            // Apply authentication (WSSE or OAuth)
+            applyAuthentication(req, environment);
+            
             req.setTimeout(60000);
             
             Http http = new Http();
@@ -368,6 +357,85 @@ public with sharing class PenneoApiService {
         }
         
         return resp;
+    }
+    
+    // ===== Authentication Helper =====
+    
+    /**
+     * Apply authentication headers to a request.
+     * Uses WSSE if OAuth credentials are not available.
+     */
+    private static void applyAuthentication(HttpRequest req, String environment) {
+        if (PenneoAuthService.shouldUseWsse(environment)) {
+            // Use WSSE authentication
+            PenneoAuthService.applyWsseHeaders(req, environment);
+        } else {
+            // Use OAuth Bearer token
+            String accessToken = PenneoAuthService.getAccessToken(environment);
+            if (String.isNotBlank(accessToken)) {
+                req.setHeader('Authorization', 'Bearer ' + accessToken);
+            }
+        }
+    }
+    
+    // ===== Test/Debug Methods =====
+    
+    /**
+     * Simple test method to verify API connectivity with WSSE.
+     * Returns list of case files or error message.
+     */
+    public static Map<String, Object> testConnection() {
+        return testConnection(null);
+    }
+    
+    public static Map<String, Object> testConnection(String environment) {
+        Map<String, Object> result = new Map<String, Object>();
+        
+        PenneoAuthService.ProviderSettings settings = PenneoAuthService.getSettings(environment);
+        if (settings == null) {
+            result.put('success', false);
+            result.put('error', 'No active signature provider settings found');
+            return result;
+        }
+        
+        result.put('environment', settings.environment);
+        result.put('apiBaseUrl', settings.apiBaseUrl);
+        result.put('authMode', PenneoAuthService.shouldUseWsse(environment) ? 'WSSE' : 'OAuth');
+        
+        try {
+            // Simple GET request to list case files (limited to 1)
+            String endpoint = settings.apiBaseUrl + '/casefiles?per_page=1';
+            
+            HttpRequest req = new HttpRequest();
+            req.setEndpoint(endpoint);
+            req.setMethod('GET');
+            req.setHeader('Accept', 'application/json');
+            
+            // Apply authentication
+            applyAuthentication(req, environment);
+            
+            req.setTimeout(30000);
+            
+            Http http = new Http();
+            HttpResponse res = http.send(req);
+            
+            result.put('statusCode', res.getStatusCode());
+            result.put('success', res.getStatusCode() == 200);
+            
+            if (res.getStatusCode() == 200) {
+                result.put('message', 'Connection successful!');
+                // Parse response to get count
+                List<Object> caseFiles = (List<Object>) JSON.deserializeUntyped(res.getBody());
+                result.put('caseFilesReturned', caseFiles.size());
+            } else {
+                result.put('error', res.getBody());
+            }
+        } catch (Exception e) {
+            result.put('success', false);
+            result.put('error', e.getTypeName() + ': ' + e.getMessage());
+        }
+        
+        return result;
     }
     
     // ===== Private Helper Methods =====

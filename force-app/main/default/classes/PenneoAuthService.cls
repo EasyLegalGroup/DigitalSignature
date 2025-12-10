@@ -1,23 +1,32 @@
 /**
  * PenneoAuthService
- * Handles OAuth 2.0 authentication with Penneo using the API Keys Grant flow.
+ * Handles authentication with Penneo using WSSE (Web Services Security).
  * 
- * The API Keys Grant requires:
- * 1. Generate a WSSE-style digest from: nonce + timestamp + API_Secret (SHA1, Base64)
- * 2. POST to OAuth token endpoint with client credentials + API key + digest
- * 3. Receive a JWT access token (valid for 600 seconds / 10 minutes)
+ * WSSE Authentication:
+ * 1. Generate a random nonce (base64 encoded)
+ * 2. Get current timestamp in ISO 8601 format
+ * 3. Create digest: base64(sha1(rawNonce + timestamp + API_Secret))
+ * 4. Add headers to each request:
+ *    - Authorization: WSSE profile="UsernameToken"
+ *    - X-WSSE: UsernameToken Username="api_key", PasswordDigest="digest", Nonce="nonce", Created="timestamp"
  * 
- * Token caching is handled via Platform Cache when available, falling back to
- * a static variable for short-term caching within a single transaction.
+ * This is a simpler approach than OAuth - no token exchange needed.
+ * Each request is authenticated independently via the WSSE headers.
  */
 public with sharing class PenneoAuthService {
+    
+    // Authentication mode
+    public enum AuthMode { WSSE, OAUTH }
+    
+    // Default to WSSE since it only requires API Key + Secret
+    private static AuthMode currentAuthMode = AuthMode.WSSE;
     
     // Cache partition name - create via Setup > Platform Cache > Org Partition
     private static final String CACHE_PARTITION = 'local.PenneoTokens';
     private static final String CACHE_KEY = 'penneo_access_token';
     private static final Integer TOKEN_TTL_SECONDS = 540; // 9 minutes (token valid for 10)
     
-    // Fallback static cache for when Platform Cache is not available
+    // Fallback static cache for when Platform Cache is not available (OAuth mode only)
     private static String cachedToken;
     private static Long cachedTokenExpiry;
     
@@ -38,13 +47,105 @@ public with sharing class PenneoAuthService {
     }
     
     /**
-     * DTO for token response
+     * DTO for token response (used in OAuth mode)
      */
     public class TokenResponse {
         public String accessToken;
         public Long expiresAt; // Unix timestamp when token expires
         public Boolean success;
         public String errorMessage;
+    }
+    
+    /**
+     * DTO for WSSE authentication headers
+     */
+    public class WsseHeaders {
+        public String authorization;
+        public String xWsse;
+        public String nonce;
+        public String created;
+        public String digest;
+    }
+    
+    /**
+     * Generate WSSE authentication headers for a request.
+     * This is the primary authentication method - no token exchange needed.
+     */
+    public static WsseHeaders generateWsseHeaders(String environment) {
+        ProviderSettings settings = getSettings(environment);
+        if (settings == null || String.isBlank(settings.apiKey) || String.isBlank(settings.apiSecret)) {
+            return null;
+        }
+        return generateWsseHeaders(settings.apiKey, settings.apiSecret);
+    }
+    
+    /**
+     * Generate WSSE authentication headers from API key and secret.
+     * 
+     * Per Penneo docs (PHP example):
+     *   $rawNonce = random_bytes(8);
+     *   $nonce = base64_encode($rawNonce);
+     *   $created = gmdate("Y-m-d\TH:i:s.v\Z");
+     *   $digest = base64_encode(sha1($rawNonce . $created . $api_secret, true));
+     */
+    public static WsseHeaders generateWsseHeaders(String apiKey, String apiSecret) {
+        WsseHeaders headers = new WsseHeaders();
+        
+        // Generate 8 random bytes for nonce
+        // Using Crypto.generateAesKey gives us 16 bytes, we'll use first 8 via hex manipulation
+        Blob fullRandom = Crypto.generateAesKey(128); // 16 bytes
+        String fullHex = EncodingUtil.convertToHex(fullRandom);
+        String nonceHex = fullHex.substring(0, 16); // 8 bytes = 16 hex chars
+        Blob rawNonce = EncodingUtil.convertFromHex(nonceHex);
+        String nonceBase64 = EncodingUtil.base64Encode(rawNonce);
+        
+        // Timestamp in ISO 8601 format with milliseconds
+        String created = Datetime.now().formatGmt('yyyy-MM-dd\'T\'HH:mm:ss.SSS\'Z\'');
+        
+        // Digest: base64(sha1(rawNonceBytes + created + apiSecret))
+        // We need to concatenate raw bytes with string bytes
+        // rawNonce (blob) + created (string) + apiSecret (string)
+        String createdAndSecret = created + apiSecret;
+        Blob createdAndSecretBlob = Blob.valueOf(createdAndSecret);
+        
+        // Concatenate blobs via hex
+        String combinedHex = EncodingUtil.convertToHex(rawNonce) + EncodingUtil.convertToHex(createdAndSecretBlob);
+        Blob combinedBlob = EncodingUtil.convertFromHex(combinedHex);
+        
+        Blob sha1Hash = Crypto.generateDigest('SHA1', combinedBlob);
+        String digest = EncodingUtil.base64Encode(sha1Hash);
+        
+        // Build headers
+        headers.authorization = 'WSSE profile="UsernameToken"';
+        headers.xWsse = 'UsernameToken Username="' + apiKey + '", PasswordDigest="' + digest + '", Nonce="' + nonceBase64 + '", Created="' + created + '"';
+        headers.nonce = nonceBase64;
+        headers.created = created;
+        headers.digest = digest;
+        
+        return headers;
+    }
+    
+    /**
+     * Apply WSSE headers to an HttpRequest.
+     */
+    public static void applyWsseHeaders(HttpRequest req, String environment) {
+        WsseHeaders headers = generateWsseHeaders(environment);
+        if (headers != null) {
+            req.setHeader('Authorization', headers.authorization);
+            req.setHeader('X-WSSE', headers.xWsse);
+        }
+    }
+    
+    /**
+     * Check if we should use WSSE authentication.
+     * Returns true if OAuth credentials are missing.
+     */
+    public static Boolean shouldUseWsse(String environment) {
+        ProviderSettings settings = getSettings(environment);
+        if (settings == null) return false;
+        
+        // Use WSSE if OAuth Client credentials are missing
+        return String.isBlank(settings.oauthClientId) || String.isBlank(settings.oauthClientSecret);
     }
     
     /**

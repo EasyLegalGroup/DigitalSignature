@@ -889,8 +889,8 @@ export default class JournalDocConsole extends LightningElement {
     this.signatureModalDocId = id;
     this.signatureModalDocName = doc.name;
     
-    // Open the modal
-    this.template.querySelector('c-signature-request-modal')?.open();
+    // Open the modal and pass doc info directly to avoid timing issues with @api binding
+    this.template.querySelector('c-signature-request-modal')?.open(id, doc.name);
   }
 
   /**

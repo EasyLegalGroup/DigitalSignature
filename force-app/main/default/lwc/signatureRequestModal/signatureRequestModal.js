@@ -89,8 +89,16 @@ export default class SignatureRequestModal extends LightningElement {
     }
 
     // Public method to open the modal
+    // Can optionally pass docId and docName directly to avoid timing issues with @api properties
     @api
-    open() {
+    open(docId, docName) {
+        // If values are passed directly, use them (otherwise fall back to @api properties)
+        if (docId) {
+            this.documentId = docId;
+        }
+        if (docName) {
+            this.documentName = docName;
+        }
         this.isOpen = true;
         this.showNewRequestForm = false;
         this.loadExistingRequests();
