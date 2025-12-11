@@ -42,6 +42,9 @@ $RECYCLE.BIN/
 # Local environment variables
 .env
 
+# Penneo API Credentials (contains sensitive keys - don't commit to git)
+force-app/main/default/customMetadata/Signature_Provider_Settings__mdt.Penneo_Sandbox.md-meta.xml
+
 # Python Salesforce Functions
 **/__pycache__/
 **/.venv/
