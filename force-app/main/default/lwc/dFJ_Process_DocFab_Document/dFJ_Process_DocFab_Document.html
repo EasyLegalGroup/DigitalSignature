@@ -1,0 +1,94 @@
+<template>
+  <!-- Selection Modal for Journal picker (shown only when multiple journals exist) -->
+  <template lwc:if={isSelectionModalOpen}>
+    <section
+      role="dialog"
+      tabindex="-1"
+      aria-modal="true"
+      class="slds-modal slds-fade-in-open slds-modal_medium"
+    >
+      <div class="slds-modal__container">
+        <header class="slds-modal__header selection-modal-header">
+          <lightning-button-icon
+            class="slds-modal__close"
+            icon-name="utility:close"
+            alternative-text="Close"
+            onclick={handleSelectionModalClose}
+            variant="bare-inverse"
+          ></lightning-button-icon>
+          <div class="slds-grid slds-grid_align-center">
+            <lightning-icon
+              icon-name="utility:record"
+              size="medium"
+              class="slds-m-right_small header-icon"
+            ></lightning-icon>
+            <h2 class="slds-modal__title slds-hyphenate">
+              Select DocFab Journal
+            </h2>
+          </div>
+          <p class="slds-text-body_regular slds-m-top_x-small modal-subtitle">
+            Choose which related journal you want to process.
+          </p>
+        </header>
+
+        <div class="slds-modal__content slds-p-around_medium">
+          <div class="slds-grid slds-wrap slds-gutters">
+            <template for:each={journalOptions} for:item="option">
+              <div
+                key={option.journalId}
+                class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_x-small"
+              >
+                <div
+                  class="selection-card"
+                  data-id={option.journalId}
+                  onclick={handleJournalSelect}
+                >
+                  <div class="selection-card-icon">
+                    <lightning-icon
+                      icon-name="utility:record"
+                      size="large"
+                    ></lightning-icon>
+                  </div>
+                  <div class="selection-card-content">
+                    <h3 class="selection-card-title">{option.label}</h3>
+                  </div>
+                  <div class="selection-card-arrow">
+                    <lightning-icon
+                      icon-name="utility:chevronright"
+                      size="x-small"
+                    ></lightning-icon>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <footer class="slds-modal__footer slds-modal__footer_directional">
+          <span></span>
+          <lightning-button
+            variant="neutral"
+            label="Cancel"
+            onclick={handleSelectionModalClose}
+          ></lightning-button>
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+  </template>
+
+  <lightning-card>
+    <div class="slds-p-vertical_small slds-p-horizontal_large">
+      <div style="font-size: large">
+        <lightning-button
+          variant="brand"
+          label="Process Docfab Document"
+          title="Process Docfab Document"
+          onclick={handleProcessDocFabDocumentButtonClick}
+          disabled={isUrlNotAvailable}
+          stretch="true"
+        ></lightning-button>
+      </div>
+    </div>
+  </lightning-card>
+</template>

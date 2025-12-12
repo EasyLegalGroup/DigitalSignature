@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomMetadata
+  xmlns="http://soap.sforce.com/2006/04/metadata"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+>
+    <label>Denmark Inheritance (Deprecated)</label>
+    <protected>false</protected>
+    <values>
+        <field>Custom_Permission__c</field>
+        <value xsi:type="xsd:string">DocFab_Form_10_DK_Inheritance</value>
+    </values>
+    <values>
+        <field>Form_Number__c</field>
+        <value xsi:type="xsd:double">10.0</value>
+    </values>
+    <values>
+        <field>Form_UUID__c</field>
+        <value
+      xsi:type="xsd:string"
+    >b7f56a5e-9572-45f6-beaa-896e35fc8f0d</value>
+    </values>
+    <values>
+        <field>Icon__c</field>
+        <value xsi:type="xsd:string">expired</value>
+    </values>
+    <values>
+        <field>Page_Layout_Label__c</field>
+        <value xsi:type="xsd:string">Denmark Inheritance (Deprecated)</value>
+    </values>
+    <values>
+        <field>Record_Model__c</field>
+        <value xsi:type="xsd:string">Inheritance_Denmark_54</value>
+    </values>
+</CustomMetadata>

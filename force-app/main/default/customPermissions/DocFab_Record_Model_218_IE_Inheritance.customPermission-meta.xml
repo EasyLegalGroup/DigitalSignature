@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomPermission xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description
+  >Grants access to the DocFab Inheritance record model for Ireland market unit. Record Model ID: 218</description>
+    <isLicensed>false</isLicensed>
+    <label>DocFab Record Model 218 (IE Inheritance)</label>
+</CustomPermission>

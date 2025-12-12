@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomMetadata
+  xmlns="http://soap.sforce.com/2006/04/metadata"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+>
+    <label>Sweden Inheritance</label>
+    <protected>false</protected>
+    <values>
+        <field>Custom_Permission__c</field>
+        <value xsi:type="xsd:string">DocFab_Form_17_SE_Inheritance</value>
+    </values>
+    <values>
+        <field>Form_Number__c</field>
+        <value xsi:type="xsd:double">17.0</value>
+    </values>
+    <values>
+        <field>Form_UUID__c</field>
+        <value
+      xsi:type="xsd:string"
+    >7c344693-7d12-43ce-9efc-727bc0f27402</value>
+    </values>
+    <values>
+        <field>Icon__c</field>
+        <value xsi:nil="true" />
+    </values>
+    <values>
+        <field>Page_Layout_Label__c</field>
+        <value xsi:type="xsd:string">Sweden Inheritance (Deprecated)</value>
+    </values>
+    <values>
+        <field>Record_Model__c</field>
+        <value xsi:type="xsd:string">Inheritance_Sweden_122</value>
+    </values>
+</CustomMetadata>

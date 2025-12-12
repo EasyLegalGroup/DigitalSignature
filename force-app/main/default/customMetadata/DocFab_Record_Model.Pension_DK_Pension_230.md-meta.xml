@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomMetadata
+  xmlns="http://soap.sforce.com/2006/04/metadata"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+>
+    <label>Pension DK Pension (230)</label>
+    <protected>false</protected>
+    <values>
+        <field>Address_Configuration_Fields__c</field>
+        <value xsi:nil="true" />
+    </values>
+    <values>
+        <field>Custom_Permission__c</field>
+        <value xsi:type="xsd:string">DocFab_Record_Model_230_DK_Pension</value>
+    </values>
+    <values>
+        <field>Description__c</field>
+        <value xsi:type="xsd:string">The record model used by DK Pension</value>
+    </values>
+    <values>
+        <field>Field_Configuration__c</field>
+        <value xsi:nil="true" />
+    </values>
+    <values>
+        <field>Icon__c</field>
+        <value xsi:type="xsd:string">question_feed</value>
+    </values>
+    <values>
+        <field>Journal_Object__c</field>
+        <value xsi:nil="true" />
+    </values>
+    <values>
+        <field>Page_Layout_Label__c</field>
+        <value xsi:type="xsd:string">Pensionsjournal</value>
+    </values>
+    <values>
+        <field>Record_Model_Id__c</field>
+        <value xsi:type="xsd:string">230</value>
+    </values>
+</CustomMetadata>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Address_Configuration_Fields__c</fullName>
+    <description
+  >JSON mapping of address fields from DocFab journal object to payment fields. Used by PS_PaymentService for address lookup.</description>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Address Configuration Fields</label>
+    <length>32768</length>
+    <type>LongTextArea</type>
+    <visibleLines>5</visibleLines>
+</CustomField>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomPermission xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description
+  >Based on the default Danish advisor form, but limited to only Pension Related questions</description>
+    <isLicensed>false</isLicensed>
+    <label>DocFab Form 54 (DK Inheritance Pension)</label>
+</CustomPermission>

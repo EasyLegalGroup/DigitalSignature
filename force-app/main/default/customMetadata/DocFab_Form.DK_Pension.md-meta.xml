@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomMetadata
+  xmlns="http://soap.sforce.com/2006/04/metadata"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+>
+    <label>DK Pension</label>
+    <protected>false</protected>
+    <values>
+        <field>Custom_Permission__c</field>
+        <value xsi:type="xsd:string">DocFab_Form_53_DK_Pension</value>
+    </values>
+    <values>
+        <field>Form_Number__c</field>
+        <value xsi:type="xsd:double">53.0</value>
+    </values>
+    <values>
+        <field>Form_UUID__c</field>
+        <value
+      xsi:type="xsd:string"
+    >0b94fca8-41bc-45f1-babf-1e10fe06f7cb</value>
+    </values>
+    <values>
+        <field>Icon__c</field>
+        <value xsi:type="xsd:string">utility:einstein</value>
+    </values>
+    <values>
+        <field>Page_Layout_Label__c</field>
+        <value xsi:type="xsd:string">DK Pension</value>
+    </values>
+    <values>
+        <field>Record_Model__c</field>
+        <value xsi:type="xsd:string">Pension_DK_Pension_230</value>
+    </values>
+</CustomMetadata>

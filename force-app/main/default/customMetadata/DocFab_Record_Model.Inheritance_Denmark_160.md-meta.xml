@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomMetadata
+  xmlns="http://soap.sforce.com/2006/04/metadata"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+>
+    <label>Inheritance Denmark (160)</label>
+    <protected>false</protected>
+    <values>
+        <field>Address_Configuration_Fields__c</field>
+        <value
+      xsi:type="xsd:string"
+    >{&quot;Street&quot;:&quot;person_adresse__c&quot;,&quot;City&quot;:&quot;person_by__c&quot;,&quot;PostalCode&quot;:&quot;person_postnummer__c&quot;}</value>
+    </values>
+    <values>
+        <field>Custom_Permission__c</field>
+        <value
+      xsi:type="xsd:string"
+    >DocFab_Record_Model_160_DK_Inheritance</value>
+    </values>
+    <values>
+        <field>Description__c</field>
+        <value
+      xsi:type="xsd:string"
+    >Denmark inheritance journal (DFJ_DK market unit)</value>
+    </values>
+    <values>
+        <field>Field_Configuration__c</field>
+        <value
+      xsi:type="xsd:string"
+    >{&quot;Name&quot;:&quot;journal_name&quot;,&quot;Lead__r.FirstName&quot;:&quot;p1_fornavn&quot;,&quot;Lead__r.LastName&quot;:&quot;p1_efternavn&quot;,&quot;Lead__r.Email&quot;:&quot;p1_email&quot;,&quot;Lead__r.Phone&quot;:&quot;p1_telefon&quot;,&quot;Lead__r.Person2_First_Name__c&quot;:&quot;p2_fornavn&quot;,&quot;Lead__r.Person2_Last_Name__c&quot;:&quot;p2_efternavn&quot;,&quot;Lead__r.Email2__c&quot;:&quot;p2_email&quot;,&quot;Lead__r.Phone2__c&quot;:&quot;p2_telefon&quot;}</value>
+    </values>
+    <values>
+        <field>Icon__c</field>
+        <value xsi:type="xsd:string">utility:knowledge_base</value>
+    </values>
+    <values>
+        <field>Journal_Object__c</field>
+        <value xsi:type="xsd:string">df_160_person__c</value>
+    </values>
+    <values>
+        <field>Page_Layout_Label__c</field>
+        <value xsi:type="xsd:string">Denmark Inheritance</value>
+    </values>
+    <values>
+        <field>Record_Model_Id__c</field>
+        <value xsi:type="xsd:string">160</value>
+    </values>
+</CustomMetadata>

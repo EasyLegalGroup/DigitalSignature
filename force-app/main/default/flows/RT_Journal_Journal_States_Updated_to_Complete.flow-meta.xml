@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Assign_Survey_Sent_Values_to_Journal</name>
+        <label>Assign Survey Sent Values to Journal</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference
+      >$Record.Time_of_Trustpilot_Request__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference
+      >$Record.Trustpilot_Request_Status__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Request sent</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference
+      >AL_Create_Customer_Care_Opportunity</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Populate_Custom_Error_with_Account_Missing</name>
+        <label>Populate Custom Error with Account Missing</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>CustomError</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Account missing on completed journal</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <isGoTo>true</isGoTo>
+            <targetReference
+      >AL_Send_Error_Email_from_Input_Values</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Populate_Custom_Error_with_Flow_Fault_Message</name>
+        <label>Populate Custom Error with Flow Fault Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>CustomError</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference
+      >AL_Send_Error_Email_from_Input_Values</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Set_Initial_Values</name>
+        <label>Set Initial Values</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference
+      >$Record.Previous_Journal_States__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Journal_States__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference
+      >$Record.Time_of_Current_Journal_States__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference
+      >$Record.TIme_of_Previous_Journal_States__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference
+        >$Record__Prior.Time_of_Current_Journal_States__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.Completed_Date__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.Completed_By__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$User.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Update_Journal</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Did_Customer_Care_Opp_Create_Succeed</name>
+        <label>Did Customer Care Opp Create Succeed?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference
+      >AL_Send_Error_Email_from_Input_Values</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Customer_Care_Opp_Create_Successful</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference
+        >IsCreateCustomerCareOppSuccess</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Journal</targetReference>
+            </connector>
+            <label>Customer Care Opp Create Successful</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Did_Is_Send_Survey_Subflow_Success</name>
+        <label>Did Is Send Survey Subflow Success?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference
+      >AL_Create_Customer_Care_Opportunity</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Send_Survey_Subflow_Successful</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference
+        >IsSendSurveySubflowSuccess</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference
+        >Assign_Survey_Sent_Values_to_Journal</targetReference>
+            </connector>
+            <label>Send Survey Subflow Successful</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Did_Production_Time_Calculation_Subflow_Succeed</name>
+        <label>Did Production Time Calculation Subflow Succeed?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference
+      >AL_Send_Error_Email_from_Input_Values</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Prod_Time_Subflow_Successful</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>CustomError</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Does_Journal_Have_an_Account</targetReference>
+            </connector>
+            <label>Prod. Time Subflow Successful</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Did_Survey_Subflow_Succeed</name>
+        <label>Did Survey Subflow Succeed?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference
+      >AL_Send_Error_Email_from_Input_Values</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Survey_Subflow_Succeeded</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>IsSurveyError</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference
+        >Did_Is_Send_Survey_Subflow_Success</targetReference>
+            </connector>
+            <label>Survey Subflow Succeeded</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description
+    >Checks if there is a Lead, an Account and an Order, and that the Order&apos;s &quot;Order Category&quot; is populated.</description>
+        <name>Do_We_Have_All_Necessary_Relations</name>
+        <label>Do We Have All Necessary Relations?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Does_Journal_Have_an_Account</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Got_Relations</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Account__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Lead__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference
+        >$Record.Order__r.Order_Category__r.Is_Active__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference
+        >AL_Calculate_Total_Time_Spend_from_Input_Journal</targetReference>
+            </connector>
+            <label>Got Relations</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Does_Journal_Have_an_Account</name>
+        <label>Does Journal Have an Account?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference
+      >Populate_Custom_Error_with_Account_Missing</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Account_Exists</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Account__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_SMS_Satisfaction_Survey</targetReference>
+            </connector>
+            <label>Account Exists</label>
+        </rules>
+    </decisions>
+    <description
+  >Updated to also set &quot;Completed Date&quot; on Journal, in the initial assignment element.</description>
+    <environments>Default</environments>
+    <interviewLabel
+  >RT - Journal: Journal States Updated to Complete {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>RT - Journal: Journal States Updated to Complete</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>Update_Journal</name>
+        <label>Update Journal</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <faultConnector>
+            <targetReference
+      >Populate_Custom_Error_with_Flow_Fault_Message</targetReference>
+        </faultConnector>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Set_Initial_Values</targetReference>
+        </connector>
+        <doesRequireRecordChangedToMeetCriteria
+    >true</doesRequireRecordChangedToMeetCriteria>
+        <filterLogic>or</filterLogic>
+        <filters>
+            <field>Journal_States__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>complete</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Journal_States__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Færdig ny process</stringValue>
+            </value>
+        </filters>
+        <object>Journal__c</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <scheduledPaths>
+            <connector>
+                <targetReference
+        >Do_We_Have_All_Necessary_Relations</targetReference>
+            </connector>
+            <pathType>AsyncAfterCommit</pathType>
+        </scheduledPaths>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <subflows>
+        <name>AL_Calculate_Total_Time_Spend_from_Input_Journal</name>
+        <label>AL - Calculate Total Time Spend from Input Journal</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference
+      >Did_Production_Time_Calculation_Subflow_Succeed</targetReference>
+        </connector>
+        <flowName>AL_Calculate_Total_Time_Spend_from_Input_Journal</flowName>
+        <inputAssignments>
+            <name>Journal</name>
+            <value>
+                <elementReference>$Record</elementReference>
+            </value>
+        </inputAssignments>
+        <outputAssignments>
+            <assignToReference>CustomError</assignToReference>
+            <name>CustomError</name>
+        </outputAssignments>
+        <outputAssignments>
+            <assignToReference>$Record.Post_Sale_Time__c</assignToReference>
+            <name>PostSaleTime</name>
+        </outputAssignments>
+        <outputAssignments>
+            <assignToReference>$Record.Pre_Sale_Time__c</assignToReference>
+            <name>PreSaleTime</name>
+        </outputAssignments>
+        <outputAssignments>
+            <assignToReference>$Record.Production_Time__c</assignToReference>
+            <name>ProductionTime</name>
+        </outputAssignments>
+    </subflows>
+    <subflows>
+        <name>AL_Create_Customer_Care_Opportunity</name>
+        <label>AL - Create Customer Care Opportunity</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference
+      >Did_Customer_Care_Opp_Create_Succeed</targetReference>
+        </connector>
+        <flowName>AL_Create_Customer_Care_Opportunity</flowName>
+        <inputAssignments>
+            <name>recordId</name>
+            <value>
+                <elementReference>$Record.Account__c</elementReference>
+            </value>
+        </inputAssignments>
+        <outputAssignments>
+            <assignToReference>CustomError</assignToReference>
+            <name>CustomError</name>
+        </outputAssignments>
+        <outputAssignments>
+            <assignToReference
+      >IsCreateCustomerCareOppSuccess</assignToReference>
+            <name>IsSuccess</name>
+        </outputAssignments>
+    </subflows>
+    <subflows>
+        <name>AL_Send_Error_Email_from_Input_Values</name>
+        <label>AL - Send Error Email from Input Values</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <flowName>AL_Send_Error_Email_from_Input_Values</flowName>
+        <inputAssignments>
+            <name>inputCustomError</name>
+            <value>
+                <elementReference>CustomError</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>inputFlowName</name>
+            <value>
+                <stringValue
+        >RT - Journal: Journal States Updated to Complete</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>inputRecordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </subflows>
+    <subflows>
+        <name>Send_SMS_Satisfaction_Survey</name>
+        <label>Send SMS Satisfaction Survey</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Did_Survey_Subflow_Succeed</targetReference>
+        </connector>
+        <flowName>AL_Send_SMS_Satisfaction_Survey</flowName>
+        <inputAssignments>
+            <name>inputJournal</name>
+            <value>
+                <elementReference>$Record</elementReference>
+            </value>
+        </inputAssignments>
+        <outputAssignments>
+            <assignToReference>CustomError</assignToReference>
+            <name>CustomError</name>
+        </outputAssignments>
+        <outputAssignments>
+            <assignToReference>IsSurveyError</assignToReference>
+            <name>IsError</name>
+        </outputAssignments>
+        <outputAssignments>
+            <assignToReference>IsSendSurveySubflowSuccess</assignToReference>
+            <name>IsSuccess</name>
+        </outputAssignments>
+    </subflows>
+    <textTemplates>
+        <name>DanishSmsBody</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>Kære {!CustomerName},
+
+Din sag hos Din Familiejurist er nu afsluttet. 
+Information omkring hvad du skal gøre for endeligt at gyldiggøre dine dokumenter, sendes på emailen {!Email}.
+
+Vi forsøger altid er dygtiggøre os og håber derfor at du vil tage dig et par sekunder, til at svare på om du har været tilfreds med din oplevelse hos Din Familiejurist.
+
+Svar JA hvis du er tilfreds
+Svar NEJ hvis du ikke er tilfreds.
+
+Alle deltagende, deltager i konkurrencen om et gavekort på 1.000 kr.
+
+Med ønsket om en dejlig dag.
+Din Familiejurist</text>
+    </textTemplates>
+    <textTemplates>
+        <name>SwedishSmsBody</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>Hej {!CustomerName},
+
+Vi strävar alltid efter att förbättra oss och hoppas därför att du vill ta några sekunder för att svara på om du har varit nöjd med din upplevelse hos Din Familjejurist.
+
+Svara JA om du är nöjd.
+Svara NEJ om du inte är nöjd.
+
+Alla deltagare, deltar i tävlingen om ett presentkort på 1.500 kr.
+
+Med önskan om en fin dag.
+Din Familjejurist</text>
+    </textTemplates>
+    <variables>
+        <name>CustomerName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>CustomError</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>Email</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>FromNumber</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>IsCreateCustomerCareOppSuccess</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
+    </variables>
+    <variables>
+        <name>IsSendSurveySubflowSuccess</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
+    </variables>
+    <variables>
+        <name>IsSurveyError</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
+    </variables>
+    <variables>
+        <name>Phone</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>SmsBody</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

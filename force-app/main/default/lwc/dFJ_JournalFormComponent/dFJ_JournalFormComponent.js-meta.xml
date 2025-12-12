@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>65.0</apiVersion>
+    <description
+  >DFJ Journal Form Component - DocFab form selection (permissions are form-based; record model inferred)</description>
+    <isExposed>true</isExposed>
+    <masterLabel>DFJ Journal Form Component</masterLabel>
+    <targets>
+        <target>lightning__RecordPage</target>
+        <target>lightning__AppPage</target>
+        <target>lightning__HomePage</target>
+        <target>lightning__UtilityBar</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig
+      targets="lightning__RecordPage,lightning__AppPage,lightning__HomePage,lightning__UtilityBar"
+    >
+            <property
+        name="buttonLabel"
+        type="String"
+        default="Open Journal Form"
+        label="Button Label"
+        description="Custom label for the button. Defaults to 'Open Journal Form' if not specified."
+      />
+            <property
+        name="buttonIcon"
+        type="String"
+        label="Button Icon"
+        description="Optional SLDS icon for the button (e.g., utility:edit_form, utility:document, custom:custom1). Leave empty for no icon."
+      />
+            <property
+        name="openBehavior"
+        type="String"
+        default="modal"
+        label="Open Behavior"
+        description="Choose modal (default), newTab, or inline to render DocFab."
+      />
+            <property
+        name="formNumbers"
+        type="String"
+        label="Form Numbers"
+        description="Comma-separated list of allowed DocFab Form Numbers (e.g., 17, 51, 22). Users must have Custom Permission to see each option. Required."
+      />
+            <!-- DEPRECATED: Legacy properties kept for backwards compatibility. Remove from page layouts when migrating to new architecture. -->
+            <property
+        name="allowMultipleDocFabJournals"
+        type="Boolean"
+        default="false"
+        label="[DEPRECATED] Allow Multiple DocFabricator Journals"
+        description="DEPRECATED - No longer used. Leads now always support multiple journals per record model via permissions."
+      />
+            <property
+        name="recordModelId"
+        type="String"
+        label="[DEPRECATED] Record Model ID"
+        description="DEPRECATED - Ignored. Record model is inferred from the selected form."
+      />
+            <property
+        name="formUuid"
+        type="String"
+        label="[DEPRECATED] Form UUID"
+        description="DEPRECATED - Ignored. Configure 'Form Numbers' instead."
+      />
+            <property
+        name="formUuids"
+        type="String"
+        label="[DEPRECATED] Form UUIDs"
+        description="DEPRECATED - Use 'Form Numbers' instead."
+      />
+            <property
+        name="formTypeUniqueName"
+        type="String"
+        label="[DEPRECATED] Form Type Unique Name"
+        description="DEPRECATED - No longer used in new architecture."
+      />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

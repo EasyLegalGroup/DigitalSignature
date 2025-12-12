@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomPermission xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description
+  >The default Danish advisor form as of November 2025 (UUID: d4c87213-eb57-4dfc-b082-1735a75d7399)</description>
+    <isLicensed>false</isLicensed>
+    <label>DocFab Form 51 (DK Inheritance)</label>
+</CustomPermission>

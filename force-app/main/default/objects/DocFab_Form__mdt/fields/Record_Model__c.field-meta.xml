@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Record_Model__c</fullName>
+    <description
+  >Lookup to the parent DocFab Record Model. Each form belongs to exactly one Record Model. Users must have permission for both the Record Model and the Form to access it.</description>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Record Model</label>
+    <referenceTo>DocFab_Record_Model__mdt</referenceTo>
+    <relationshipLabel>DocFab Forms</relationshipLabel>
+    <relationshipName>DocFab_Forms</relationshipName>
+    <required>true</required>
+    <type>MetadataRelationship</type>
+    <unique>false</unique>
+</CustomField>
