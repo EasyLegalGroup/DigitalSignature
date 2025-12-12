@@ -174,16 +174,18 @@
 
                             <!-- right group : buttons -->
                             <div class="right-actions">
-                              <lightning-button
-                                size="small"
-                                variant="neutral"
-                                label="Sign"
-                                title="Request digital signature"
-                                icon-name="utility:edit"
-                                data-id={d.id}
-                                onclick={onRequestSignature}
-                                disabled={busy}>
-                              </lightning-button>
+                              <template if:true={canShowSignButton}>
+                                <lightning-button
+                                  size="small"
+                                  variant="neutral"
+                                  label="Sign"
+                                  title="Request digital signature"
+                                  icon-name="utility:edit"
+                                  data-id={d.id}
+                                  onclick={onRequestSignature}
+                                  disabled={busy}>
+                                </lightning-button>
+                              </template>
                               <lightning-button
                                 class="slds-m-left_x-small"
                                 size="small"
@@ -325,13 +327,15 @@
     </div>
   </lightning-card>
 
-  <!-- Signature Request Modal -->
-  <c-signature-request-modal
-    document-id={signatureModalDocId}
-    document-name={signatureModalDocName}
-    journal-id={recordId}
-    account-id={accountId}
-    market-unit={journalMarketUnit}
-    onsignaturecreated={handleSignatureCreated}>
-  </c-signature-request-modal>
+  <!-- Signature Request Modal (only rendered if Sign feature is enabled) -->
+  <template if:true={canShowSignButton}>
+    <c-signature-request-modal
+      document-id={signatureModalDocId}
+      document-name={signatureModalDocName}
+      journal-id={recordId}
+      account-id={accountId}
+      market-unit={journalMarketUnit}
+      onsignaturecreated={handleSignatureCreated}>
+    </c-signature-request-modal>
+  </template>
 </template>

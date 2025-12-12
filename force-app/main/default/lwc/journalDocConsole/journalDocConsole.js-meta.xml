@@ -21,6 +21,11 @@
                 default="false" 
                 label="Allow Approvals" 
                 description="Allow clients to approve documents during impersonation sessions" />
+      <property name="showSignButton" 
+                type="Boolean" 
+                default="false" 
+                label="Show Sign Button" 
+                description="Show the Sign button on documents. Users also need the 'DocShare Access Sign Feature' custom permission." />
       <property name="defaultAllowApprove" 
                 type="Boolean" 
                 default="false" 

@@ -4,6 +4,9 @@ import { getObjectInfo, getPicklistValuesByRecordType } from 'lightning/uiObject
 import { refreshApex } from '@salesforce/apex';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
+/* ---------- Custom Permission ---------- */
+import hasSignFeatureAccess from '@salesforce/customPermission/DocShare_Access_Sign_Feature';
+
 /* ---------- Apex ---------- */
 import getOrCreateCreds      from '@salesforce/apex/DocShare_JournalCreds.getOrCreate';
 import createForJournalBulk  from '@salesforce/apex/DocShareService.createForJournalBulk';
@@ -57,7 +60,17 @@ export default class JournalDocConsole extends LightningElement {
   /* ========== Design attributes (configurable in Lightning Page) ========== */
   @api linkExpiryMinutes = 120;      // Configurable: link expiry in minutes (default 2 hours)
   @api allowApprove = false;          // Configurable: approval rights for impersonation
+  @api showSignButton = false;        // Configurable: show Sign button (also requires custom permission)
   @api defaultAllowApprove = false;   // Deprecated (kept for backward compatibility)
+
+  /**
+   * Computed property: show Sign button only if BOTH conditions are met:
+   * 1. showSignButton page layout property is true
+   * 2. User has DocShare_Access_Sign_Feature custom permission
+   */
+  get canShowSignButton() {
+    return this.showSignButton && hasSignFeatureAccess;
+  }
 
   ready    = false;
   disabled = true;
